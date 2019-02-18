@@ -7,6 +7,7 @@
 package main
 
 import (
+	"math/rand"
 	"strings"
 )
 
@@ -16,6 +17,16 @@ import (
 // [Match] Match columns: dot product with each other, keep only the best match
 // [Cleanup] Assume that there is only single one best match.
 // If it is taken, there is nothing left (the match is nil)
+
+// [Reduce space] Take random N(100) fields of each column of each file (reducing step)
+func TakeSeed(size int, input []string) []string {
+	sizeofinput := int32(len(input))
+	result := []string{}
+	for i := 0; i <= size; i++ {
+		result = append(result, input[rand.Int31n(sizeofinput)])
+	}
+	return result
+}
 
 func MatchBetweenSimple(input1, input2 []string) float64 {
 	matches := 0

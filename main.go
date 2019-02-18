@@ -11,8 +11,12 @@ package main
 // guess_headers -mode json -as join      file1.csv file2.csv  => {"DateOfPublishment": "age", "BookCreator":"Author", "Title":"BookName"} e.t.c
 // guess_headers -mode json -as template  file1.csv file2.csv  => file2.csv with the same headers as file1.csv
 
-import ()
+import (
+	"math/rand"
+	"time"
+)
 
 func main() {
+	rand.Seed(time.Now().UTC().UnixNano())
 
 }
