@@ -72,3 +72,20 @@ func CleanUp(data []Triplet) []Triplet {
 	}
 	return data
 }
+
+// will take headers of every column in a given input
+func ChunkOffHeaders(input [][]string) ([]string, [][]string) {
+	headers := []string{}
+	body := [][]string{}
+
+	for _, point := range input {
+		headers = append(headers, point[0])
+		body = append(body, point[0:])
+	}
+	return headers, body
+}
+
+// main function of a guesser algorithm
+func Guess(input1 [][]string, input2 [][]string) {
+	return
+}
