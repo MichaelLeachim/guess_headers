@@ -63,5 +63,8 @@ func TestChunkOffHeaders(t *testing.T) {
 
 	assert.Equal(t, headers, []string{})
 	assert.Equal(t, body, [][]string{})
+}
+
+func TestGuess(t *testing.T) {
 
 }
