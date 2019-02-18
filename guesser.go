@@ -59,13 +59,13 @@ func CleanUp(data []Triplet) []Triplet {
 	scores := map[string]float64{}
 	for _, item := range data {
 		score, ok := scores[strings.Join(item.Right, "")]
-		if ok && score <= item.Score {
+		if ok && (score <= item.Score) {
 			scores[strings.Join(item.Right, "")] = item.Score
 		}
 	}
 	for index, item := range data {
 		score, ok := scores[strings.Join(item.Right, "")]
-		if ok && score <= item.Score {
+		if ok && (score <= item.Score) {
 			data[index].Right = nil
 			data[index].Score = 0
 		}
@@ -85,11 +85,20 @@ func ChunkOffHeaders(input [][]string) ([]string, [][]string) {
 	return headers, body
 }
 
+// the opposite function of ChunkOffHeaders
+func JoinUpHeaders(headers []string, body [][]string) [][]string {
+	for index, point := range body {
+		body[index] = append([]string{headers[index]}, point...)
+	}
+	return body
+}
+
 // main function of a guesser algorithm
 // chunk off headers
 // for every column
 func Guess(input1 [][]string, input2 [][]string) {
 	input1plets := []Triplet{}
+
 	for _, input1 := range input1 {
 		input1plets = append(input1plets, CalculateBestMatch(MatchBetweenSimple, input1, input2))
 	}
