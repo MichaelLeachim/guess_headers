@@ -46,7 +46,7 @@ func CalculateBestMatch(scoreFn func([]string, []string) float64, input1 []strin
 // [Cleanup] Assume that there is only single best match. If it is taken, there is nothing left (the match is nil)
 func CleanUp(data []Triplet) []Triplet {
 	scores := map[string]float64{}
-	for index, item := range data {
+	for _, item := range data {
 		score, ok := scores[strings.Join(item.Right, "")]
 		if ok && score <= item.Score {
 			scores[strings.Join(item.Right, "")] = item.Score

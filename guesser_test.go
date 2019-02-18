@@ -12,8 +12,6 @@ import (
 	"testing"
 )
 
-
-
 func TestCleanUp(t *testing.T)  {
 	x := []Triplet{
 		newTestTriplet(1.0,"1912","1912"),
@@ -27,6 +25,27 @@ func TestCleanUp(t *testing.T)  {
 	assert.Equal(t,CleanUp(x),"")
 }
 
+func TestMatchBetweenSimple(t *testing.T){
+	assert.Equal(t,MatchBetweenSimple([]string{"hello","world","foo","bar"}, []string{"hello","world"}),"")
+	assert.Equal(t,MatchBetweenSimple([]string{}, []string{"hello","world"}),"")
+	assert.Equal(t,MatchBetweenSimple([]string{}, []string{}),"")
+	assert.Equal(t,MatchBetweenSimple([]string{"A"}, []string{"B"}),"")
+	
+}
+
+func TestCalculateBestMatch(t *testing.T){
+	
+	assert.Equal(t,CalculateBestMatch(MatchBetweenSimple, []string{"Hello", "World"}, [][]string{
+		[]string{"Hello"},
+		[]string{"World"},
+		[]string{"Hello","World","Blab"},
+		[]string{"Blab"},
+		[]string{"Hello","World"},
+		[]string{""},
+		[]string{},
+	}),"")
+	
+}
 
 func TestSimpleGuessing(t *testing.T) {
 
