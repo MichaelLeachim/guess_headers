@@ -22,8 +22,17 @@ func MatchAlgoHamming(input1, input2 []string) float64 {
 }
 
 // Chooses something from input2 that matches input1 in the best way
-func CalculateBestMatch(input1 []string, input2 [][]string) Triplet {
-
+func CalculateBestMatch(scoreFn func([]string, []string) float64, input1 []string, input2 [][]string) Triplet {
+	best := float64(0.0)
+	bestItem := Triplet{}
+	for _, input2 := range input2 {
+		score := scoreFn(input1, input2)
+		if best < score {
+			best = score
+			bestItem = Triplet{Left: input1, Right: input2, Score: best}
+		}
+	}
+	return bestItem
 }
 
 // [Cleanup] Assume that there is only single best match. If it is taken, there is nothing left (the match is nil)

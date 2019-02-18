@@ -12,6 +12,8 @@ import (
 	"testing"
 )
 
+
+
 func TestCleanUp(t *testing.T)  {
 	x := []Triplet{
 		newTestTriplet(1.0,"1912","1912"),
