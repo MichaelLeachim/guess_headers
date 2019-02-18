@@ -89,5 +89,10 @@ func ChunkOffHeaders(input [][]string) ([]string, [][]string) {
 // chunk off headers
 // for every column
 func Guess(input1 [][]string, input2 [][]string) {
-	return
+	input1plets := []Triplet{}
+	for _, input1 := range input1 {
+		input1plets = append(input1plets, CalculateBestMatch(MatchBetweenSimple, input1, input2))
+	}
+	input1plets = CleanUp(input1plets)
+
 }
