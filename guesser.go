@@ -86,6 +86,8 @@ func ChunkOffHeaders(input [][]string) ([]string, [][]string) {
 }
 
 // main function of a guesser algorithm
+// chunk off headers
+// for every column
 func Guess(input1 [][]string, input2 [][]string) {
 	return
 }
