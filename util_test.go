@@ -15,6 +15,4 @@ import (
 func TestTokenizeNumbers(t *testing.T) {
 	assert.Equal(t, TokenizeNumbers("1920"), "1900 900 20 0")
 	assert.Equal(t, TokenizeNumbers("0.00345"), "0.003 0.0004 0.00005")
-	assert.Equal(t, TokenizeNumbers("0000"), "0000")
-
 }
