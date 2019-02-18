@@ -6,14 +6,30 @@
 // @@@@@@ At 2019-02-18 19:09 <thereisnodotcollective@gmail.com> @@@@@@@@@@@@@@@@@@@@@@@@
 package main
 
-type GuessField struct {
-	Content string
-}
-type GuessColumn struct {
-	RowName string
-	Fields  []GuessField
+// Guessing algorithm (ideas):
+// [Reduce space] Take random N(100) fields of each column of each file (reducing step)
+// [Tokenize] Tokenize numbers via splitting, i.e. 1924 => (1000 900 20 4)
+// [Match] Match columns: dot product with each other, keep only the best match
+// [Cleanup] Assume that there is only single one best match. If it is taken, there is nothing left (the match is nil)
+
+func MatchAlgoHamming(input1, input2 []string) float64 {
+
 }
 
-func GuessHeaders(input []GuessColumn) {
+// Chooses something from input2 that matches input1 in the best way
+func CalculateBestMatch(input1 []string, input2 [][]string) Triplet {
+
+}
+
+// [Cleanup] Assume that there is only single one best match. If it is taken, there is nothing left (the match is nil)
+func CleanUp(data []Triplet) []Triplet {
+	for index,item :=data {
+		
+	}
+	
+}
+
+// returns match score
+func MatchBetween(input1, input2 []string) float64 {
 
 }
