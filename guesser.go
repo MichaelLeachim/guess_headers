@@ -28,6 +28,14 @@ func TakeSeed(size int, input []string) []string {
 	return result
 }
 
+// same as <TakeSeed>, but for the collection of columns
+func TakeSeedOfList(size int, input [][]string) [][]string {
+	for index, item := range input {
+		input[index] = TakeSeed(size, item)
+	}
+	return input
+}
+
 func MatchBetweenSimple(input1, input2 []string) float64 {
 	matches := 0
 	for _, input1 := range input1 {
@@ -94,14 +102,17 @@ func JoinUpHeaders(headers []string, body [][]string) [][]string {
 }
 
 // main function of a guesser algorithm
-// chunk off headers
 // for every column
-func Guess(input1 [][]string, input2 [][]string) {
+func Guess(input1 [][]string, input2 [][]string) []Triplet {
 	input1plets := []Triplet{}
+	input1headers, input1body := ChunkOffHeaders(input1)
+	input2headers, input2body := ChunkOffHeaders(input2)
 
-	for _, input1 := range input1 {
-		input1plets = append(input1plets, CalculateBestMatch(MatchBetweenSimple, input1, input2))
+	input1reduced := JoinUpHeaders(input1headers, TakeSeedOfList(100, input1body))
+	input2reduced := JoinUpHeaders(input2headers, TakeSeedOfList(100, input2body))
+
+	for _, input1 := range input1reduced {
+		input1plets = append(input1plets, CalculateBestMatch(MatchBetweenSimple, input1, input2reduced))
 	}
-	input1plets = CleanUp(input1plets)
-
+	return input1plets
 }

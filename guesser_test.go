@@ -77,7 +77,6 @@ func TestJoinUpHeaders(t *testing.T) {
 	data = [][]string{}
 	headers, body = ChunkOffHeaders(data)
 	assert.Equal(t, JoinUpHeaders(headers, body), data)
-
 }
 
 func TestGuess(t *testing.T) {
