@@ -12,6 +12,20 @@ import (
 	"testing"
 )
 
+func TestCleanUp(t *testing.T)  {
+	x := []Triplet{
+		newTestTriplet(1.0,"1912","1912"),
+		newTestTriplet(0.5,"1912 blab","1912 blob"),
+		newTestTriplet(0.0,"hello","world"),
+		newTestTriplet(0.3,"whatever","never"),
+		newTestTriplet(1.0,"never","never"),
+		newTestTriplet(1.0,"alltimes","alltimes"),
+		newTestTriplet(0.7,"sometimes","alltimes"),
+	}
+	assert.Equal(t,CleanUp(x),"")
+}
+
+
 func TestSimpleGuessing(t *testing.T) {
 
 	file1 := [][]string{
