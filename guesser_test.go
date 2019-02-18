@@ -65,6 +65,21 @@ func TestChunkOffHeaders(t *testing.T) {
 	assert.Equal(t, body, [][]string{})
 }
 
+func TestJoinUpHeaders(t *testing.T) {
+	data := [][]string{
+		[]string{"name", "Michael"},
+		[]string{"surname", "Leahcim"},
+		[]string{"NoBody"},
+		[]string{}}
+	headers, body := ChunkOffHeaders(data)
+	assert.Equal(t, JoinUpHeaders(headers, body), data)
+
+	data = [][]string{}
+	headers, body = ChunkOffHeaders(data)
+	assert.Equal(t, JoinUpHeaders(headers, body), data)
+
+}
+
 func TestGuess(t *testing.T) {
 
 }
