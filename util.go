@@ -16,3 +16,20 @@ import (
 func newTestTriplet(score float64, left, right string) Triplet {
 	return Triplet{Left: strings.Split(left, " "), Right: strings.Split(right, " "), Score: score}
 }
+
+// from here: https://github.com/git-time-metric/gtm/blob/master/util/string.go#L53-L88
+func RightPad2Len(s string, padStr string, overallLen int) string {
+	var padCountInt = 1 + ((overallLen - len(padStr)) / len(padStr))
+	var retStr = s + strings.Repeat(padStr, padCountInt)
+	return retStr[:overallLen]
+}
+
+// [Tokenize] Tokenize numbers via splitting, i.e. 1924 => (1000 900 20 4)
+func TokenizeNumbers(number string) string {
+	for index, _ := range number {
+		number[:index]
+
+	}
+	number[0]
+
+}

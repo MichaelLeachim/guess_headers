@@ -30,11 +30,9 @@ func TestMatchBetweenSimple(t *testing.T){
 	assert.Equal(t,MatchBetweenSimple([]string{}, []string{"hello","world"}),"")
 	assert.Equal(t,MatchBetweenSimple([]string{}, []string{}),"")
 	assert.Equal(t,MatchBetweenSimple([]string{"A"}, []string{"B"}),"")
-	
 }
 
 func TestCalculateBestMatch(t *testing.T){
-	
 	assert.Equal(t,CalculateBestMatch(MatchBetweenSimple, []string{"Hello", "World"}, [][]string{
 		[]string{"Hello"},
 		[]string{"World"},
@@ -44,7 +42,6 @@ func TestCalculateBestMatch(t *testing.T){
 		[]string{""},
 		[]string{},
 	}),"")
-	
 }
 
 func TestSimpleGuessing(t *testing.T) {
