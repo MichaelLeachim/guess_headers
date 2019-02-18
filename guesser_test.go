@@ -12,6 +12,12 @@ import (
 	"testing"
 )
 
+func TestTakeSeed(t *testing.T){
+	assert.Equal(t,TakeSeed(3, []string{}),"")
+	assert.Equal(t,TakeSeed(3, []string{"A"}),[]string{"A","A","A"})
+	assert.Equal(t,len(TakeSeed(1000, []string{"A","B","N"})),1000)
+}
+
 func TestCleanUp(t *testing.T)  {
 	x := []Triplet{
 		newTestTriplet(1.0,"1912","1912"),
