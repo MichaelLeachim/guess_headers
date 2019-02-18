@@ -17,8 +17,16 @@ import (
 // [Cleanup] Assume that there is only single one best match.
 // If it is taken, there is nothing left (the match is nil)
 
-func MatchAlgoHamming(input1, input2 []string) float64 {
-
+func MatchBetweenSimple(input1, input2 []string) float64 {
+	matches := 0
+	for _, input1 := range input1 {
+		for _, input2 := range input2 {
+			if input1 == input2 {
+				matches += 1
+			}
+		}
+	}
+	return float64(matches) / float64(((len(input1) + len(input2)) - matches))
 }
 
 // Chooses something from input2 that matches input1 in the best way
@@ -52,9 +60,4 @@ func CleanUp(data []Triplet) []Triplet {
 		}
 	}
 	return data
-}
-
-// returns match score
-func MatchBetween(input1, input2 []string) float64 {
-
 }
