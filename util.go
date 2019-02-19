@@ -18,6 +18,24 @@ func newTestTriplet(score float64, left, right string) Triplet {
 	return Triplet{Left: strings.Split(left, " "), Right: strings.Split(right, " "), Score: score}
 }
 
+// will transpose input matrix
+func TransposeMatrix(input [][]string) [][]string {
+
+	// instantiate output
+	output := [][]string{}
+	for i := 0; i <= len(input[0]); i++ {
+		output = append(output, make([]string, len(input)))
+	}
+
+	// populate it with data
+	for index4row, row := range input {
+		for index4col, cell := range row {
+			output[index4col][index4row] = cell
+		}
+	}
+	return output
+}
+
 // [Tokenize] Tokenize numbers via splitting, i.e. 1924 => (10 91 22 34)
 func TokenizeNumbers(number string) string {
 	result := []string{}
