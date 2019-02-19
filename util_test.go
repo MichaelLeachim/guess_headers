@@ -12,6 +12,15 @@ import (
 	"testing"
 )
 
+func TestTransposeMatrix(t *testing.T) {
+	matrix := [][]string{
+		[]string{"H", "e", "l", "l", "o"},
+		[]string{"W", "o", "r", "l", "d"},
+	}
+	assert.Equal(t, TransposeMatrix(TransposeMatrix(matrix)), matrix)
+	assert.Equal(t, TransposeMatrix(matrix), "")
+}
+
 func TestTokenizeNumbers(t *testing.T) {
 	assert.Equal(t, TokenizeNumbers("1920"), "1900 900 20 0")
 	assert.Equal(t, TokenizeNumbers("0.00345"), "0.003 0.0004 0.00005")
