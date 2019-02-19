@@ -36,7 +36,7 @@ Right now these are implemented:
 
 Intuitive way to remember Bayes' theorem in context of bag of words model is:
 
-`P(Word|Translation) = (P(Translation|Word) * P(Word))/P(Translation)`
+`P(Translation|Word) = (P(Word|Translation) * P(Translation))/P(Word)`
 
 * Probability of a word, given translation, i.e. 1/(how many words have this translation)
 * Probability of a word:      (this word appears times)/(all words appears)
