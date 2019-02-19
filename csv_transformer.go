@@ -15,7 +15,21 @@ import (
 )
 
 func WriteCSVFile(fpath string, data [][]string) error {
+	file, err := os.Create(fpath)
+	if err != nil {
+		return err
+	}
+	defer file.Close()
 
+	writer := csv.NewWriter(file)
+	writer.Flush()
+	for _, value := range data {
+		err := writer.Write(value)
+		if err != nil {
+			return err
+		}
+	}
+	return writer.Error()
 }
 
 func ReadCSVFile(fpath string, comma rune) ([][]string, error) {
