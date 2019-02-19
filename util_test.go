@@ -19,6 +19,13 @@ func TestTransposeMatrix(t *testing.T) {
 	}
 	assert.Equal(t, TransposeMatrix(TransposeMatrix(matrix)), matrix)
 	assert.Equal(t, TransposeMatrix(matrix), "")
+
+	// how it works on empty input?
+	assert.Equal(t, [][]string{}, "")
+
+	// how it works on sparse input?
+	assert.Equal(t, [][]string{[]string{"H"}, []string{"H", "A"}}, "")
+
 }
 
 func TestTokenizeNumbers(t *testing.T) {

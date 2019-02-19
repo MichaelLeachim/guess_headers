@@ -14,9 +14,9 @@ import (
 	"os"
 )
 
-// func WriteCSVFile(fpath string, data [][]string) error {
+func WriteCSVFile(fpath string, data [][]string) error {
 
-// }
+}
 
 func ReadCSVFile(fpath string, comma rune) ([][]string, error) {
 	result := [][]string{}
