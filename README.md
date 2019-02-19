@@ -30,6 +30,7 @@ Right now these are implemented:
 
 * Simple match ([Jaccard distance](https://en.wikipedia.org/wiki/Jaccard_index) between columns, compare function is simple equality)
 * [TODO] Bayessian column match 
+* [TODO] TFIDF match
 * [TODO] Simple match + Cell2Cell(levenshtein/hamming)
 
 ##### Bayessian column match
