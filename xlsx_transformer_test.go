@@ -22,5 +22,18 @@ func TestReadXLSXFile(t *testing.T) {
 }
 
 func TestWriteXLSXFile(t *testing.T) {
+	tmpfile, err := ioutil.TempFile("", "tmp_xlsx_file")
+	assert.Equal(t, err, nil)
+	// remove after use
+	defer os.Remove(tmpfile.Name())
+
+	// read data for writing
+	csv, _ := ReadCSVFile("testdata/input1.csv", ',')
+	// write it into temp file
+	assert.Equal(t, WriteXLSXFile(tmpfile.Name(), "sampleSheet", csv), nil)
+	// read again
+	xlsx, err := ReadXLSXFile(tmpfile.Name(), "sampleSheet")
+	// assume equals
+	assert.Equal(t, csv, xlsx)
 
 }
