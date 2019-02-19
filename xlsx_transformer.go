@@ -14,8 +14,21 @@ import (
 )
 
 // !!! will work only on one sheet of the file !!!
-func WriteXLSXFile(fpath string, data [][]string) error {
+func WriteXLSXFile(fpath string, sheetName string, data [][]string) error {
+	file := xlsx.NewFile()
+	sheet, err := file.AddSheet(sheetName)
+	if err != nil {
+		return err
+	}
 
+	for _, row := range data {
+		row4file := sheet.AddRow()
+		for _, cell := range row {
+			cell4file := row4file.AddCell()
+			cell4file.Value = cell
+		}
+	}
+	return file.Save(fpath)
 }
 
 // !!! will work only on one sheet of the file !!!
