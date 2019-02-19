@@ -32,12 +32,34 @@ Right now these are implemented:
 * [TODO] Bayessian column match 
 * [TODO] Simple match + Cell2Cell(levenshtein/hamming)
 
+##### Bayessian column match
+
+Intuitive way to remember Bayes' theorem in context of bag of words model is:
+
+`Word|Translation = ((Translation|Word) * P(Word))/P(Translation)`
+
+* Probability of a word, given translation, i.e. 1/(how many words have this translation)
+* Probability of a word:      (this word appears times)/(all words appears)
+* Probability of translation: (this translation word appears)/(all translation words appear )
+
+
 #### All input data is transformed by these rules, in order
 
 * [TODO] Lowercased
 * [TODO] Transliterated into ASCII
 * [TODO] Alphanumeric only
 * [TODO] Positional number tokenized (Turn 1923 into this string: "1900 900 20 3")
+
+
+
+
+
+
+
+
+
+
+
 
 #### For each cell (field) full column metadata is applied
 
