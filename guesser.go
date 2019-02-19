@@ -101,6 +101,14 @@ func JoinUpHeaders(headers []string, body [][]string) [][]string {
 	return body
 }
 
+func Concordance(data []Triplet) [][]string {
+	result := [][]string{}
+	for _, item := range data {
+		result = append(result, []string{item.Left[0], item.Right[0]})
+	}
+	return result
+}
+
 // main function of a guesser algorithm
 // for every column
 func Guess(input1 [][]string, input2 [][]string) []Triplet {
