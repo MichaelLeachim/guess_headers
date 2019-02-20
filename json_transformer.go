@@ -31,6 +31,37 @@ func WriteJSONFile(fpath string, data [][]string) error {
 	return ioutil.WriteFile(fpath, jsonAsBytes, 0644)
 }
 
-func ReadJSONFile(fpath string, comma rune) ([][]string, error) {
-	pass
+func ReadJSONFile(fpath string) ([][]string, error) {
+	result := [][]string{}
+	bytesOfJson, err := ioutil.ReadFile(fpath)
+	if err != nil {
+		return result, err
+	}
+	tempResult := []map[string]string{}
+	err = json.Unmarshal(bytesOfJson, &tempResult)
+	if err != nil {
+		return result, err
+	}
+
+	// set up headers for the data down the road
+	tempHeads := map[string]bool{}
+	for _, row := range tempResult {
+		for head, _ := range row {
+			tempHeads[head] = true
+		}
+	}
+
+	heads := []string{}
+	for head, _ := range tempHeads {
+		heads = append(heads, head)
+	}
+
+	for _, row := range tempResult {
+		resultRow := []string{}
+		for _, head := range heads {
+			resultRow = append(resultRow, row[head])
+		}
+		result = append(result, resultRow)
+	}
+	return result, nil
 }
