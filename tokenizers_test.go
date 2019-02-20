@@ -12,6 +12,10 @@ import (
 	"testing"
 )
 
+func TestTokenizeUnidecode(t *testing.T) {
+	assert.Equal(t, TokenizeAlphaNumericOnly("Привет hello !№;%:? world*"), "")
+}
+
 func TestTokenizeAlphaNumericOnly(t *testing.T) {
 	assert.Equal(t, TokenizeAlphaNumericOnly("Привет hello !№;%:? world*"), "hello world")
 }
