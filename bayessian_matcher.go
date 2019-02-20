@@ -13,7 +13,7 @@ import (
 )
 
 // P(Category|Word) = (P(Word|Category) * P(Category))/P(Word)
-func makeBayessianMatcher(input [][]string) func(a, b []string) float64 {
+func makeBayessianMatcher(input [][]string) func(a []string) ([]string, float64) {
 	categoryMapping := map[string][]string{}
 
 	cat2String := func(data []string) string {
@@ -65,35 +65,42 @@ func makeBayessianMatcher(input [][]string) func(a, b []string) float64 {
 	}
 
 	// evaluate result of training
-	return func(words, category2match []string) float64 {
-		cat := cat2String(category2match)
-		totalP := 0.0
+	return func(words []string) ([]string, float64) {
+		bestCat := ""
+		bestP := 0.0
+		for cat, categoryAppearTimes := range categoryMapping {
+			totalP := 0.0
 
-		// P(Category)
-		categoryAppearTimes, ok := category[cat]
-		if !ok {
-			categoryAppearTimes = 1
-		}
-
-		pCat := math.Log(math.Log(float64(categoryAppearTimes)) - math.Log(float64(totalCategories)))
-		totalP = pCat
-
-		wordGivenCategory, ok := wordGivenCategory[cat]
-		wordGivenCategoryLen := len(wordGivenCategory)
-		if !ok {
-			wordGivenCategory = map[string]uint32{}
-			wordGivenCategoryLen = 1
-		}
-
-		for _, wordItem := range words {
-			// calculate P(Word|Category), P(Word, given Category)
-			wordGivenCategoryAppearsTimes, ok := wordGivenCategory[wordItem]
+			// P(Category)
+			categoryAppearTimes, ok := category[cat]
 			if !ok {
-				wordGivenCategoryAppearsTimes = 1
+				categoryAppearTimes = 1
 			}
-			pWordGivenCategory := math.Log(float64(wordGivenCategoryAppearsTimes)) - math.Log(float64(wordGivenCategoryLen))
-			totalP += pWordGivenCategory
+
+			pCat := math.Log(math.Log(float64(categoryAppearTimes)) - math.Log(float64(totalCategories)))
+			totalP = pCat
+
+			wordGivenCategory, ok := wordGivenCategory[cat]
+			wordGivenCategoryLen := len(wordGivenCategory)
+			if !ok {
+				wordGivenCategory = map[string]uint32{}
+				wordGivenCategoryLen = 1
+			}
+
+			for _, wordItem := range words {
+				// calculate P(Word|Category), P(Word, given Category)
+				wordGivenCategoryAppearsTimes, ok := wordGivenCategory[wordItem]
+				if !ok {
+					wordGivenCategoryAppearsTimes = 1
+				}
+				pWordGivenCategory := math.Log(float64(wordGivenCategoryAppearsTimes)) - math.Log(float64(wordGivenCategoryLen))
+				totalP += pWordGivenCategory
+			}
+			if totalP > bestP {
+				bestP = totalP
+				bestCat = cat
+			}
 		}
-		return totalP
+		return string2Cat(bestCat), bestP
 	}
 }
