@@ -7,6 +7,46 @@
 
 package main
 
-func makeTFIDFMatcher(input [][]string) func(a, b []string) float64 {
+import (
+	"math"
+)
 
+func makeTFIDFMatcher(input [][]string) func(a, b []string) float64 {
+	idf := map[string]uint32{}
+	totalDocs := len(input)
+
+	for _, row := range input {
+		row2insert := map[string]bool{}
+		for _, cell := range row {
+			row2insert[cell] = true
+		}
+		for cell2insert, _ := range row2insert {
+			idf[cell2insert] += 1
+		}
+	}
+
+	return func(query, response []string) float64 {
+		termsFrequency := map[string]uint32{}
+		maxTermFrequency := uint32(0)
+
+		for _, word := range query {
+			for _, response := range response {
+				if response == word {
+					termsFrequencyItem := termsFrequency[response]
+					termsFrequencyItem += 1
+					if termsFrequencyItem > maxTermFrequency {
+						maxTermFrequency = termsFrequencyItem
+					}
+					termsFrequency[response] = termsFrequencyItem
+				}
+			}
+		}
+		result := float64(0)
+		for term, termFrequency := range termsFrequency {
+			tf := 0.5 + 0.5*float64(termFrequency/maxTermFrequency)
+			idf := math.Log(float64(totalDocs) / (float64(1 + idf[term])))
+			result += tf * idf
+		}
+		return result / float64(len(termsFrequency))
+	}
 }
