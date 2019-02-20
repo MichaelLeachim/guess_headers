@@ -9,6 +9,8 @@ package main
 
 import (
 	"github.com/stretchr/testify/assert"
+	"io/ioutil"
+	"os"
 	"testing"
 )
 
@@ -20,5 +22,20 @@ func TestReadJSONFile(t *testing.T) {
 }
 
 func TestWriteJSONFile(t *testing.T) {
+	tmpfile, err := ioutil.TempFile("", "tmp_json_file")
+	assert.Equal(t, err, nil)
+	// remove after use
+	defer os.Remove(tmpfile.Name())
+
+	// read data for writing
+	json, err := ReadJSONFile("testdata/input1.json")
+	assert.Equal(t, err, nil)
+	// write it into temp file
+	assert.Equal(t, WriteJSONFile(tmpfile.Name(), json), nil)
+	// read again
+	json2, err := ReadJSONFile(tmpfile.Name())
+	assert.Equal(t, err, nil)
+	// assume equals
+	assert.Equal(t, json, json2)
 
 }
