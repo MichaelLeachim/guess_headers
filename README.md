@@ -29,8 +29,8 @@ with several tweaks.
 Right now these are implemented:
 
 * Simple match ([Jaccard distance](https://en.wikipedia.org/wiki/Jaccard_index) between columns, compare function is simple equality)
-* [TODO] Bayessian column match 
-* [TODO] TFIDF match
+* [DONE] Bayessian column match 
+* [DONE] TFIDF match
 * [TODO] Simple match + Cell2Cell(levenshtein/hamming)
 
 ##### Bayessian column match
@@ -47,7 +47,7 @@ Intuitive way to remember Bayes' theorem in context of bag of words model is:
 #### All input data is transformed by these rules, in order
 
 * [TODO] Lowercased
-* [TODO] Transliterated into ASCII
+* [DONE] [Transliterated](https://github.com/mozillazg/go-unidecode) into ASCII
 * [TODO] Alphanumeric only
 * [TODO] Positional number tokenized (Turn 1923 into this string: "1900 900 20 3")
 
