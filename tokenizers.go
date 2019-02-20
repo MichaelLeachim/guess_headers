@@ -17,13 +17,18 @@ func TokenizeUnidecode(input string) string {
 	return unidecode.Unidecode(input)
 }
 
+func TokenizeLowercase(input string) string {
+	return strings.ToLower(input)
+
+}
+
 // Will take only aphanumeric data from the input
 
-const TokenizeAlphaNumericOnly = func() func(string) string {
+var TokenizeAlphaNumericOnly = func() func(string) string {
 	alphanum := regexp.MustCompile("[A-Za-z0-9]+")
 
 	return func(input string) string {
-		return strings.Join(alphanum.FindAllString(input), " ")
+		return strings.Join(alphanum.FindAllString(input, -1), " ")
 	}
 }()
 

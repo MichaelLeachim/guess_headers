@@ -46,21 +46,10 @@ Intuitive way to remember Bayes' theorem in context of bag of words model is:
 
 #### All input data is transformed by these rules, in order
 
-* [TODO] Lowercased
+* [DONE] Lowercased
 * [DONE] [Transliterated](https://github.com/mozillazg/go-unidecode) into ASCII
-* [TODO] Alphanumeric only
-* [TODO] Positional number tokenized (Turn 1923 into this string: "1900 900 20 3")
-
-
-
-
-
-
-
-
-
-
-
+* [DONE] Alphanumeric only
+* [DONE] Positional number tokenized (Turn 1923 into this string: "1900 900 20 3")
 
 #### For each cell (field) full column metadata is applied
 
