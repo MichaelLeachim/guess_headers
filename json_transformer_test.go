@@ -9,14 +9,14 @@ package main
 
 import (
 	"github.com/stretchr/testify/assert"
-	"io/ioutil"
-	"os"
 	"testing"
 )
 
 func TestReadJSONFile(t *testing.T) {
 	csv, _ := ReadCSVFile("testdata/input1.csv", ',')
-
+	json, err := ReadJSONFile("testdata/input1.json")
+	assert.Equal(t, err, nil)
+	assert.Equal(t, csv, json)
 }
 
 func TestWriteJSONFile(t *testing.T) {
