@@ -13,6 +13,7 @@ import (
 )
 
 // P(Category|Word) = (P(Word|Category) * P(Category))/P(Word)
+// Input data is, at the same time a category mapping
 func makeBayessianMatcher(input [][]string) func(a []string) ([]string, float64) {
 	categoryMapping := map[string][]string{}
 

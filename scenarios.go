@@ -7,8 +7,44 @@
 
 package main
 
+// Let's simplify:
+// We've got input, a csv file, like this
+
+// [["name" "email"]
+//  ["Michael" "thereisnodotcollective@gmail.com"]]
+
+// Now, we can transpose this input, making it:
+// [["name" "Michael"] ["email" "thereisnodotcollective@gmail.com"]]
+
+// Now, we might take only a sample of this input, saving field names and then joining them again together
+// And, we can also process the fields to make them easier to match via tokenizers.
+
+// After that, we will have:
+   * row to row match.
+	 * null on the right (not matched)
+   * null on the left  (not matched)
+
+// Then, we will be able to use those triplets to return data, either as:
+   * headers of the first file, on the second file 
+   * reverse of
+   * concordance between field names
+
 // will return concordance between right and left headers of the dataset
-func ReturnConcordHeaders(data [][]string) [][]string {
+func ReturnConcordHeaders(input, output [][]string) [][]string {
+	seedOfInput := TakeSeedOfList(100, input)
+	seedOfOutput := TakeSeedOfList(100, output)
+
+	inputHeaders, inputBody := ChunkOffHeaders(input)
+	outputHeaders, outputBody := ChunkOffHeaders(output)
+
+	inputSeed := TakeSeedOfList(100, inputBody)
+	outputSeed := TakeSeedOfList(100, outputBody)
+
+	bayessianMatcher := makeBayessianMatcher(outputSeed)
+	for _, inputSeedRow := range inputSeed {
+		outputSeedRow, score := bayessianMatcher(inputSeedRow)
+
+	}
 
 }
 

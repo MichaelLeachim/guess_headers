@@ -14,11 +14,11 @@ import (
 // Guessing algorithm (ideas):
 // [Reduce space] Take random N(100) fields of each column of each file (reducing step)
 // [Tokenize] Tokenize numbers via splitting, i.e. 1924 => (1000 900 20 4)
-// [Match] Match columns: dot product with each other, keep only the best match
+// [Match] Match columns: cross join with each other, keep only the best match
 // [Cleanup] Assume that there is only single one best match.
 // If it is taken, there is nothing left (the match is nil)
 
-// [Reduce space] Take random N(100) fields of each column of each file (reducing step)
+// [Reduce amount] Take random N(100) fields of each column of each file (reducing step)
 func TakeSeed(size int, input []string) []string {
 	sizeofinput := int32(len(input))
 	result := []string{}
