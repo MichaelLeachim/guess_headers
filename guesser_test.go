@@ -18,6 +18,34 @@ func TestTakeSeed(t *testing.T) {
 	assert.Equal(t, len(TakeSeed(1000, []string{"A", "B", "N"})), 1000)
 }
 
+func TestBuildUp(t *testing.T) {
+	triplets := []Triplet{
+		newTestTriplet(1.0, "1912", "1912"),
+		newTestTriplet(0.5, "1912 blab", "1912 blob"),
+		newTestTriplet(0.0, "hello", "world"),
+		newTestTriplet(0.3, "whatever", "never"),
+		newTestTriplet(1.0, "never", "never"),
+		newTestTriplet(1.0, "alltimes", "alltimes"),
+		newTestTriplet(0.7, "sometimes", "alltimes"),
+	}
+	rightSide := [][]string{
+		[]string{"1912"},
+		[]string{"1912", "blob"},
+		[]string{"world"},
+		[]string{"never"},
+		[]string{"alltimes"},
+		[]string{"foo"},
+		[]string{"bar"},
+		[]string{"baz"},
+	}
+
+	resultTriplets := BuildUp(triplets, rightSide)
+	resultTriplets[7].Left = []string{"foo"}
+	resultTriplets[8].Left = []string{"bar"}
+	resultTriplets[9].Left = []string{"baz"}
+
+}
+
 func TestCleanUp(t *testing.T) {
 	x := []Triplet{
 		newTestTriplet(1.0, "1912", "1912"),
