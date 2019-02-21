@@ -8,7 +8,6 @@
 package main
 
 import (
-	"strconv"
 	"strings"
 )
 
@@ -34,13 +33,4 @@ func TransposeMatrix(input [][]string) [][]string {
 		}
 	}
 	return output
-}
-
-// [Tokenize] Tokenize numbers via splitting, i.e. 1924 => (10 91 22 34)
-func TokenizeNumbers(number string) string {
-	result := []string{}
-	for index, number := range number {
-		result = append(result, string(number)+strconv.Itoa(index))
-	}
-	return strings.Join(result, " ")
 }

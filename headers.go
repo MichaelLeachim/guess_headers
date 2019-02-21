@@ -12,3 +12,9 @@ type Triplet struct {
 	Right []string
 	Score float64
 }
+
+const (
+	MATCH_BAYES = 1 + iota
+	MATCH_SIMPLE
+	MATCH_TFIDF
+)

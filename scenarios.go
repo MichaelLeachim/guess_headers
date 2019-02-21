@@ -31,20 +31,7 @@ package main
 
 // will return concordance between right and left headers of the dataset
 func ReturnConcordHeaders(input, output [][]string) [][]string {
-	seedOfInput := TakeSeedOfList(100, input)
-	seedOfOutput := TakeSeedOfList(100, output)
 
-	inputHeaders, inputBody := ChunkOffHeaders(input)
-	outputHeaders, outputBody := ChunkOffHeaders(output)
-
-	inputSeed := TakeSeedOfList(100, inputBody)
-	outputSeed := TakeSeedOfList(100, outputBody)
-
-	bayessianMatcher := makeBayessianMatcher(outputSeed)
-	for _, inputSeedRow := range inputSeed {
-		outputSeedRow, score := bayessianMatcher(inputSeedRow)
-
-	}
 }
 
 // Will return right file with left headers

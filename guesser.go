@@ -17,6 +17,8 @@ import (
 // [Match] Match columns: cross join with each other, keep only the best match
 // [Cleanup] Assume that there is only single one best match.
 // If it is taken, there is nothing left (the match is nil)
+// [BuildUp]   For those from the right which wasn't chosen by the left
+// If it wasn't taken up by the match stage
 
 // [Reduce amount] Take random N(100) fields of each column of each file (reducing step)
 func TakeSeed(size int, input []string) []string {
@@ -109,18 +111,35 @@ func Concordance(data []Triplet) [][]string {
 	return result
 }
 
-// main function of a guesser algorithm
-// for every column
-func Guess(input1 [][]string, input2 [][]string) []Triplet {
-	input1plets := []Triplet{}
-	input1headers, input1body := ChunkOffHeaders(input1)
-	input2headers, input2body := ChunkOffHeaders(input2)
+// [][]string is a list of columns
+func Guess(input, output [][]string) []Triplet {
 
-	input1reduced := JoinUpHeaders(input1headers, TakeSeedOfList(100, input1body))
-	input2reduced := JoinUpHeaders(input2headers, TakeSeedOfList(100, input2body))
+	// chunk off heads of every row
+	inputHeaders, inputBody := ChunkOffHeaders(input)
+	outputHeaders, outputBody := ChunkOffHeaders(output)
 
-	for _, input1 := range input1reduced {
-		input1plets = append(input1plets, CalculateBestMatch(MatchBetweenSimple, input1, input2reduced))
+	// take seed from data
+	inputSeed := TakeSeedOfList(100, inputBody)
+	outputSeed := TakeSeedOfList(100, outputBody)
+
+	// tokenize data
+	tokenizedInputSeed := ApplyTokenizerToMatrix(inputSeed, TokenizeUnidecode, TokenizeLowercase, TokenizeNumbers, TokenizeAlphaNumericOnly)
+	tokenizedOutputSeed := ApplyTokenizerToMatrix(outputSeed, TokenizeUnidecode, TokenizeLowercase, TokenizeNumbers, TokenizeAlphaNumericOnly)
+
+	// append headers to tokenized data
+	tokenizedInputSeedWithHeaders := JoinUpHeaders(inputHeaders, tokenizedInputSeed)
+	tokenizedOutputSeedWithHeaders := JoinUpHeaders(outputHeaders, tokenizedOutputSeed)
+
+	// join two datasets
+	triplets := []Triplet{}
+	for _, input := range tokenizedInputSeedWithHeaders {
+		triplets = append(triplets, CalculateBestMatch(MatchBetweenSimple, input, tokenizedOutputSeedWithHeaders))
 	}
-	return input1plets
+
+	// remove every right, if it is duplicated
+	triplets = CleanUp(triplets)
+	// append every left, that wasn't used
+
+	return triplets
+
 }
