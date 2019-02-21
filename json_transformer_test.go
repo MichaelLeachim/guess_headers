@@ -14,6 +14,21 @@ import (
 	"testing"
 )
 
+func TestMatrix2HashMap(t *testing.T) {
+	testData := [][]string{
+		[]string{"Name", "Surname", "Email"},
+		[]string{"Michael", "Leahcim", "thecollective@gmail.com"},
+		[]string{"John", "Doe", "john.doe@gmail.com"},
+		[]string{"Marie", "Sue", "marie.sue@gmail.com"},
+	}
+	assert.Equal(t, Matrix2HashMap(testData), "")
+	assert.Equal(t, Matrix2HashMap([][]string{}), "")
+}
+
+func TestHashMap2Matrix(t *testing.T) {
+
+}
+
 func TestReadJSONFile(t *testing.T) {
 	csv, _ := ReadCSVFile("testdata/input1.csv", ',')
 	json, err := ReadJSONFile("testdata/input1.json")
