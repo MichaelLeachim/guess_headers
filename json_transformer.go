@@ -28,12 +28,11 @@ func Matrix2HashMap(data [][]string) []map[string]string {
 }
 
 func HashMap2Matrix(data []map[string]string) [][]string {
-	tempResult := []map[string]string{}
 	result := [][]string{}
 
 	// set up headers for the data down the road
 	tempHeads := map[string]bool{}
-	for _, row := range tempResult {
+	for _, row := range data {
 		for head, _ := range row {
 			tempHeads[head] = true
 		}
@@ -44,7 +43,7 @@ func HashMap2Matrix(data []map[string]string) [][]string {
 		heads = append(heads, head)
 	}
 
-	for _, row := range tempResult {
+	for _, row := range data {
 		resultRow := []string{}
 		for _, head := range heads {
 			resultRow = append(resultRow, row[head])
@@ -65,13 +64,16 @@ func WriteJSONFile(fpath string, data [][]string) error {
 }
 
 func ReadJSONFile(fpath string) ([][]string, error) {
+	tempResult := []map[string]string{}
 
 	bytesOfJson, err := ioutil.ReadFile(fpath)
 	if err != nil {
-		return result, err
+		return [][]string{}, err
 	}
+
 	err = json.Unmarshal(bytesOfJson, &tempResult)
 	if err != nil {
-		return result, err
+		return [][]string{}, err
 	}
+	return HashMap2Matrix(tempResult), nil
 }
