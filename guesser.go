@@ -142,8 +142,8 @@ func BaseGuessColumnsFunction(input, output [][]string) []Triplet {
 	outputSeed := TakeSeedOfList(100, outputBody)
 
 	// tokenize data
-	tokenizedInputSeed := ApplyTokenizerToMatrix(inputSeed, TokenizeUnidecode, TokenizeLowercase, TokenizeNumbers, TokenizeAlphaNumericOnly)
-	tokenizedOutputSeed := ApplyTokenizerToMatrix(outputSeed, TokenizeUnidecode, TokenizeLowercase, TokenizeNumbers, TokenizeAlphaNumericOnly)
+	tokenizedInputSeed := ApplyRetokenizeOnSpaceToMatrix(ApplyTokenizerToMatrix(inputSeed, TokenizeUnidecode, TokenizeLowercase, TokenizeNumbers, TokenizeAlphaNumericOnly))
+	tokenizedOutputSeed := ApplyRetokenizeOnSpaceToMatrix(ApplyTokenizerToMatrix(outputSeed, TokenizeUnidecode, TokenizeLowercase, TokenizeNumbers, TokenizeAlphaNumericOnly))
 
 	// append headers to tokenized data
 	tokenizedInputSeedWithHeaders := JoinUpHeaders(inputHeaders, tokenizedInputSeed)
@@ -158,8 +158,6 @@ func BaseGuessColumnsFunction(input, output [][]string) []Triplet {
 	// remove every right, if it is duplicated
 	triplets = CleanUp(triplets)
 	// append every left, that wasn't used
-	triplets = BuildUp(triplets)
-
+	triplets = BuildUp(triplets, tokenizedOutputSeedWithHeaders)
 	return triplets
-
 }

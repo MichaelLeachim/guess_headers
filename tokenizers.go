@@ -48,6 +48,14 @@ func ReTokenizeOnSpace(data []string) []string {
 	return strings.Split(strings.Join(data, " "), " ")
 }
 
+func ApplyRetokenizeOnSpaceToMatrix(data [][]string) [][]string {
+	result := [][]string{}
+	for _, row := range data {
+		result = append(result, ReTokenizeOnSpace(row))
+	}
+	return result
+}
+
 func ApplyTokenizerToRow(data []string, workers ...func(string) string) []string {
 	result := []string{}
 	for _, item := range data {
