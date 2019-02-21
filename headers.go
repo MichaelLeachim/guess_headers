@@ -8,9 +8,10 @@
 package main
 
 type Triplet struct {
-	Left  []string
-	Right []string
-	Score float64
+	Left       []string
+	Right      []string
+	RightIndex int
+	Score      float64
 }
 
 const (

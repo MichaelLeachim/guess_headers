@@ -54,11 +54,11 @@ func MatchBetweenSimple(input1, input2 []string) float64 {
 func CalculateBestMatch(scoreFn func([]string, []string) float64, input1 []string, input2 [][]string) Triplet {
 	best := float64(0.0)
 	bestItem := Triplet{}
-	for _, input2 := range input2 {
+	for index, input2 := range input2 {
 		score := scoreFn(input1, input2)
 		if best < score {
 			best = score
-			bestItem = Triplet{Left: input1, Right: input2, Score: best}
+			bestItem = Triplet{Left: input1, Right: input2, RightIndex: index, Score: best}
 		}
 	}
 	return bestItem
@@ -129,6 +129,14 @@ func Concordance(data []Triplet) [][]string {
 		result = append(result, []string{item.Left[0], item.Right[0]})
 	}
 	return result
+}
+
+// this is a base implementation of a guess function for row guessing
+func BaseGuessRowsFunction(input, output [][]string) ([][]string, []string) {
+	// tokenize data
+	tokenizedInput := ApplyRetokenizeOnSpaceToMatrix(ApplyTokenizerToMatrix(input, TokenizeUnidecode, TokenizeLowercase, TokenizeNumbers, TokenizeAlphaNumericOnly))
+	tokenizedOutput := ApplyRetokenizeOnSpaceToMatrix(ApplyTokenizerToMatrix(output, TokenizeUnidecode, TokenizeLowercase, TokenizeNumbers, TokenizeAlphaNumericOnly))
+
 }
 
 // this is a base implementation of a guess function for column guessing

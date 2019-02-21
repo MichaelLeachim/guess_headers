@@ -14,24 +14,9 @@ import (
 
 // P(Category|Word) = (P(Word|Category) * P(Category))/P(Word)
 // Input data is, at the same time a category mapping
-func makeBayessianMatcher(input [][]string) func(a []string) ([]string, float64) {
-	categoryMapping := map[string][]string{}
-
+func makeBayessianMatcher(input [][]string) func(a []string) (int, float64) {
 	cat2String := func(data []string) string {
-		key := strings.Join(data, "")
-		res, ok := categoryMapping[key]
-		if !ok {
-			categoryMapping[key] = data
-		}
-		return key
-	}
-
-	string2Cat := func(data string) []string {
-		res, ok := categoryMapping[data]
-		if !ok {
-			panic("No such category: " + data)
-		}
-		return res
+		return strings.Join(data, "")
 	}
 
 	// for calculation P(Category)
@@ -42,7 +27,7 @@ func makeBayessianMatcher(input [][]string) func(a []string) ([]string, float64)
 	wordGivenCategory := map[string]map[string]uint32{}
 
 	// iterate over data and do traning
-	for _, row := range input {
+	for index, row := range input {
 		cat := cat2String(row)
 		// training P(Category)
 		category[cat] += 1
@@ -66,14 +51,15 @@ func makeBayessianMatcher(input [][]string) func(a []string) ([]string, float64)
 	}
 
 	// evaluate result of training
-	return func(words []string) ([]string, float64) {
-		bestCat := ""
+	return func(words []string) (int, float64) {
+		bestCatIndex := 0
 		bestP := 0.0
-		for cat, categoryAppearTimes := range categoryMapping {
+		for index, catSlice := range input {
 			totalP := 0.0
+			catString := cat2String(catSlice)
 
 			// P(Category)
-			categoryAppearTimes, ok := category[cat]
+			categoryAppearTimes, ok := category[catString]
 			if !ok {
 				categoryAppearTimes = 1
 			}
@@ -81,7 +67,7 @@ func makeBayessianMatcher(input [][]string) func(a []string) ([]string, float64)
 			pCat := math.Log(math.Log(float64(categoryAppearTimes)) - math.Log(float64(totalCategories)))
 			totalP = pCat
 
-			wordGivenCategory, ok := wordGivenCategory[cat]
+			wordGivenCategory, ok := wordGivenCategory[catString]
 			wordGivenCategoryLen := len(wordGivenCategory)
 			if !ok {
 				wordGivenCategory = map[string]uint32{}
@@ -99,9 +85,9 @@ func makeBayessianMatcher(input [][]string) func(a []string) ([]string, float64)
 			}
 			if totalP > bestP {
 				bestP = totalP
-				bestCat = cat
+				bestCatIndex = index
 			}
 		}
-		return string2Cat(bestCat), bestP
+		return bestCatIndex, bestP
 	}
 }

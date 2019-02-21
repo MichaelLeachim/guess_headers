@@ -11,7 +11,7 @@ import (
 	"math"
 )
 
-func makeTFIDFMatcher(input [][]string) func(a []string) ([]string, float64) {
+func makeTFIDFMatcher(input [][]string) func(a []string) (int, float64) {
 	idf := map[string]uint32{}
 	totalDocs := len(input)
 
@@ -25,11 +25,11 @@ func makeTFIDFMatcher(input [][]string) func(a []string) ([]string, float64) {
 		}
 	}
 
-	return func(query []string) ([]string, float64) {
-		bestResponse := []string{}
+	return func(query []string) (int, float64) {
+		bestResponseIndex := 0
 		bestResponseScore := 0.0
 
-		for _, response := range input {
+		for index, response := range input {
 			termsFrequency := map[string]uint32{}
 			maxTermFrequency := uint32(0)
 
@@ -53,11 +53,11 @@ func makeTFIDFMatcher(input [][]string) func(a []string) ([]string, float64) {
 			}
 			tfidf := result / float64(len(termsFrequency))
 			if tfidf > bestResponseScore {
-				bestResponse = response
+				bestResponseIndex = index
 				bestResponseScore = tfidf
 			}
 		}
-		return bestResponse, bestResponseScore
+		return bestResponseIndex, bestResponseScore
 	}
 
 }
