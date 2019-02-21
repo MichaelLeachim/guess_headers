@@ -12,6 +12,11 @@ import (
 	"testing"
 )
 
+func TestRepeatString(t *testing.T) {
+	assert.Equal(t, RepeatString("", 3), []string{"", "", ""})
+	assert.Equal(t, RepeatString("", 0), []string{})
+}
+
 func TestTransposeMatrix(t *testing.T) {
 	matrix := [][]string{
 		[]string{"H", "e", "l", "l", "o"},

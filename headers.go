@@ -12,7 +12,14 @@ type Triplet struct {
 	Right      []string
 	RightIndex int
 	Score      float64
+	Kind       int
 }
+
+const (
+	TRIPLET_LEFT_ONLY = 1 + iota
+	TRIPLET_RIGHT_ONLY
+	TRIPLET_BOTH_MATCH
+)
 
 const (
 	MATCH_BAYES = 1 + iota

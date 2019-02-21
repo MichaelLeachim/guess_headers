@@ -31,20 +31,24 @@ package main
 
 // will return concordance between right and left headers of the dataset
 func ReturnConcordHeaders(input, output [][]string) [][]string {
+	return [][]string{}
 
 }
 
 // Will return right file with left headers
 func ReturnRightFileWithLeftHeaders(data [][]string) [][]string {
+	return [][]string{}
 
 }
 
 // Will return left file with right headers
 func ReturnLeftFileWithRightHeaders(data [][]string) [][]string {
+	return [][]string{}
 
 }
 
 // will return left join between two files
 func ReturnLeftJoinBetweenFiles(data [][]string) [][]string {
+	return [][]string{}
 
 }

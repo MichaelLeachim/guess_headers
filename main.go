@@ -4,6 +4,7 @@
 // @ You must not remove this notice, or any other, from this software.                 @
 // @ All rights reserved.                                                               @
 // @@@@@@ At 2019-02-18 19:08 <thereisnodotcollective@gmail.com> @@@@@@@@@@@@@@@@@@@@@@@@
+
 package main
 
 // Usage example:

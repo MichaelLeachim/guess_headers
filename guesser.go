@@ -58,7 +58,7 @@ func CalculateBestMatch(scoreFn func([]string, []string) float64, input1 []strin
 		score := scoreFn(input1, input2)
 		if best < score {
 			best = score
-			bestItem = Triplet{Left: input1, Right: input2, RightIndex: index, Score: best}
+			bestItem = Triplet{Left: input1, Right: input2, RightIndex: index, Score: best, Kind: TRIPLET_BOTH_MATCH}
 		}
 	}
 	return bestItem
@@ -78,7 +78,7 @@ func BuildUp(triplets []Triplet, rightSide [][]string) []Triplet {
 			continue
 		}
 		// this data is unmatched, so, add it
-		triplets = append(triplets, Triplet{Left: nil, Right: row, Score: 0})
+		triplets = append(triplets, Triplet{Left: []string{}, Right: row, Score: 0, Kind: TRIPLET_RIGHT_ONLY})
 	}
 	return triplets
 }
@@ -95,8 +95,7 @@ func CleanUp(data []Triplet) []Triplet {
 	for index, item := range data {
 		score, ok := scores[strings.Join(item.Right, "")]
 		if ok && (score <= item.Score) {
-			data[index].Right = nil
-			data[index].Score = 0
+			data[index].Kind = TRIPLET_LEFT_ONLY
 		}
 	}
 	return data
@@ -122,20 +121,13 @@ func JoinUpHeaders(headers []string, body [][]string) [][]string {
 	return body
 }
 
-func Concordance(data []Triplet) [][]string {
-	result := [][]string{}
-	result = append(result, []string{"Left", "Right"})
-	for _, item := range data {
-		result = append(result, []string{item.Left[0], item.Right[0]})
-	}
-	return result
-}
-
 // this is a base implementation of a guess function for row guessing
 func BaseGuessRowsFunction(input, output [][]string, hasDuplicates bool) [][]string {
 	// tokenize data
 	headersOfInput, input := input[0], input[1:]
 	headersOfOutput, output := output[0], output[1:]
+	padInput := RepeatString("", len(headersOfInput))
+	padOutput := RepeatString("", len(headersOfOutput))
 
 	tokenizedInput := ApplyRetokenizeOnSpaceToMatrix(ApplyTokenizerToMatrix(input, TokenizeUnidecode, TokenizeLowercase, TokenizeNumbers, TokenizeAlphaNumericOnly))
 	tokenizedOutput := ApplyRetokenizeOnSpaceToMatrix(ApplyTokenizerToMatrix(output, TokenizeUnidecode, TokenizeLowercase, TokenizeNumbers, TokenizeAlphaNumericOnly))
@@ -154,12 +146,16 @@ func BaseGuessRowsFunction(input, output [][]string, hasDuplicates bool) [][]str
 	triplets = BuildUp(triplets, output)
 	result := append([][]string{}, append(headersOfInput, headersOfOutput...))
 	for index, triplet := range triplets {
-		leftSide := input[index]
-		rightSide := output[triplet.RightIndex]
-		result = append(result, append(leftSide, rightSide...))
+		switch triplet.Kind {
+		case TRIPLET_BOTH_MATCH:
+			result = append(result, append(input[index], output[triplet.RightIndex]...))
+		case TRIPLET_LEFT_ONLY:
+			result = append(result, append(input[index], padOutput...))
+		case TRIPLET_RIGHT_ONLY:
+			result = append(result, append(padInput, output[triplet.RightIndex]...))
+		}
 	}
 	return result
-
 }
 
 // this is a base implementation of a guess function for column guessing
@@ -196,19 +192,14 @@ func BaseGuessColumnsFunction(input, output [][]string) (map[string]string, []st
 	onlyLeft := []string{}
 	onlyRight := []string{}
 
-	for _, placeholderName := range Concordance(triplets) {
-		left, right := placeholderName[0], placeholderName[1]
-		if left != "" && right != "" {
-			concordance[left] = right
-			continue
-		}
-		if left != "" {
-			onlyLeft = append(onlyLeft, left)
-			continue
-		}
-		if right != "" {
-			onlyRight = append(onlyRight, right)
-			continue
+	for _, triplet := range triplets {
+		switch triplet.Kind {
+		case TRIPLET_BOTH_MATCH:
+			concordance[triplet.Left[0]] = triplet.Right[0]
+		case TRIPLET_LEFT_ONLY:
+			onlyLeft = append(onlyLeft, triplet.Left[0])
+		case TRIPLET_RIGHT_ONLY:
+			onlyRight = append(onlyRight, triplet.Right[0])
 		}
 	}
 	return concordance, onlyLeft, onlyRight
