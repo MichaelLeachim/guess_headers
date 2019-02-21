@@ -53,3 +53,11 @@ func ApplyTokenizerToRow(data []string, workers ...func(string) string) []string
 	}
 	return result
 }
+
+func ApplyTokenizerToMatrix(data [][]string, workers ...func(string) string) [][]string {
+	result := [][]string{}
+	for _, row := range data {
+		result = append(result, ApplyTokenizerToRow(row, workers...))
+	}
+	return result
+}
