@@ -8,8 +8,8 @@ package main
 
 // Usage example:
 // will create
-// guess_headers -mode json -as join      file1.csv file2.csv  => {"DateOfPublishment": "age", "BookCreator":"Author", "Title":"BookName"} e.t.c
-// guess_headers -mode json -as template  file1.csv file2.csv  => file2.csv with the same headers as file1.csv
+// guess_headers -mode json -as concordance   file1.csv file2.csv  => {"DateOfPublishment": "age", "BookCreator":"Author", "Title":"BookName"} e.t.c
+// guess_headers -mode json -as template      file1.csv file2.csv  => file2.csv with the same headers as file1.csv
 
 import (
 	"math/rand"

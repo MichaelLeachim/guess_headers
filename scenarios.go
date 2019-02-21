@@ -20,14 +20,14 @@ package main
 // And, we can also process the fields to make them easier to match via tokenizers.
 
 // After that, we will have:
-   * row to row match.
-	 * null on the right (not matched)
-   * null on the left  (not matched)
+// * row to row match.
+// * null on the right (not matched)
+// * null on the left  (not matched)
 
 // Then, we will be able to use those triplets to return data, either as:
-   * headers of the first file, on the second file 
-   * reverse of
-   * concordance between field names
+// * headers of the first file, on the second file
+// * reverse of
+// * concordance between field names
 
 // will return concordance between right and left headers of the dataset
 func ReturnConcordHeaders(input, output [][]string) [][]string {
@@ -45,7 +45,6 @@ func ReturnConcordHeaders(input, output [][]string) [][]string {
 		outputSeedRow, score := bayessianMatcher(inputSeedRow)
 
 	}
-
 }
 
 // Will return right file with left headers

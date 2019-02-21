@@ -86,15 +86,11 @@ Hunting for the bottlenecks is an ongoing task [TODO]
 
 ```
 
-
-
-
-
-
-
-
-
 # TODO
+## [2019-02-20] [22:18]
+
+Get it to work in the MVP form ASAP. 
+MVP is: Only headers. Only simple worker. No tokenizers. Do it in the morning (while head is working)
 
 ## [2019-02-19] [19:53]
 

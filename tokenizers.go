@@ -42,3 +42,14 @@ func TokenizeNumbers(number string) string {
 	}
 	return strings.Join(result, " ")
 }
+
+func ApplyTokenizerToRow(data []string, workers ...func(string) string) []string {
+	result := []string{}
+	for _, item := range data {
+		for _, worker := range workers {
+			item = worker(item)
+		}
+		result = append(result, item)
+	}
+	return result
+}
