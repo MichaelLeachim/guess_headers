@@ -64,6 +64,25 @@ func CalculateBestMatch(scoreFn func([]string, []string) float64, input1 []strin
 	return bestItem
 }
 
+// [BuildUp]   For those from the right which wasn't chosen by the left
+// If it wasn't taken up by the match stage
+func BuildUp(triplets []Triplet, rightSide [][]string) []Triplet {
+	rightStore := map[string]bool{}
+
+	for _, triplet := range triplets {
+		rightStore[strings.Join(triplet.Right, "")] = true
+	}
+	for _, row := range rightSide {
+		// already have this data matched
+		if rightStore[strings.Join(row, "")] {
+			continue
+		}
+		// this data is unmatched, so, add it
+		triplets = append(triplets, Triplet{Left: nil, Right: row, Score: 0})
+	}
+	return triplets
+}
+
 // [Cleanup] Assume that there is only single best match. If it is taken, there is nothing left (the match is nil)
 func CleanUp(data []Triplet) []Triplet {
 	scores := map[string]float64{}
