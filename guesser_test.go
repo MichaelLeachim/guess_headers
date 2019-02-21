@@ -112,6 +112,10 @@ func TestBaseGuessColumnsFunction(t *testing.T) {
 	csv2, err := ReadCSVFile("testdata/input2.csv", ',')
 	assert.Equal(t, err, nil)
 	assert.Equal(t, err, nil)
-	assert.Equal(t, Matrix2HashMap(Concordance(BaseGuessColumnsFunction(TransposeMatrix(csv1), TransposeMatrix(csv2)))), "")
+	concordace, left, right := BaseGuessColumnsFunction(TransposeMatrix(csv1), TransposeMatrix(csv2))
+
+	assert.Equal(t, concordace, "")
+	assert.Equal(t, left, "")
+	assert.Equal(t, right, "")
 
 }
