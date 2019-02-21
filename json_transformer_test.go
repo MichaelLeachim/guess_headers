@@ -21,12 +21,30 @@ func TestMatrix2HashMap(t *testing.T) {
 		[]string{"John", "Doe", "john.doe@gmail.com"},
 		[]string{"Marie", "Sue", "marie.sue@gmail.com"},
 	}
-	assert.Equal(t, Matrix2HashMap(testData), "")
-	assert.Equal(t, Matrix2HashMap([][]string{}), "")
+	testDataHashMap := []map[string]string{
+		map[string]string{"Name": "Michael", "Surname": "Leahcim", "Email": "thecollective@gmail.com"},
+		map[string]string{"Name": "John", "Surname": "Doe", "Email": "john.doe@gmail.com"},
+		map[string]string{"Name": "Marie", "Surname": "Sue", "Email": "marie.sue@gmail.com"},
+	}
+
+	assert.Equal(t, Matrix2HashMap(testData), testDataHashMap)
+	assert.Equal(t, Matrix2HashMap([][]string{}), []map[string]string{})
 }
 
 func TestHashMap2Matrix(t *testing.T) {
-
+	testDataMatrix := [][]string{
+		[]string{"Name", "Surname", "Email"},
+		[]string{"Michael", "Leahcim", "thecollective@gmail.com"},
+		[]string{"John", "Doe", "john.doe@gmail.com"},
+		[]string{"Marie", "Sue", "marie.sue@gmail.com"},
+	}
+	testDataHashMap := []map[string]string{
+		map[string]string{"Name": "Michael", "Surname": "Leahcim", "Email": "thecollective@gmail.com"},
+		map[string]string{"Name": "John", "Surname": "Doe", "Email": "john.doe@gmail.com"},
+		map[string]string{"Name": "Marie", "Surname": "Sue", "Email": "marie.sue@gmail.com"},
+	}
+	assert.Equal(t, HashMap2Matrix(testDataHashMap), testDataMatrix)
+	assert.Equal(t, HashMap2Matrix([]map[string]string{}), [][]string{})
 }
 
 func TestReadJSONFile(t *testing.T) {
