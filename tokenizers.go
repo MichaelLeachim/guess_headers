@@ -43,6 +43,11 @@ func TokenizeNumbers(number string) string {
 	return strings.Join(result, " ")
 }
 
+// will lose field information
+func ReTokenizeOnSpace(data []string) []string {
+	return strings.Split(strings.Join(data, " "), " ")
+}
+
 func ApplyTokenizerToRow(data []string, workers ...func(string) string) []string {
 	result := []string{}
 	for _, item := range data {

@@ -130,14 +130,14 @@ func Concordance(data []Triplet) [][]string {
 	return result
 }
 
-// [][]string is a list of columns
-func Guess(input, output [][]string) []Triplet {
+// this is a base implementation of a guess function for columns guessing
+func BaseGuessColumnsFunction(input, output [][]string) []Triplet {
 
 	// chunk off heads of every row
 	inputHeaders, inputBody := ChunkOffHeaders(input)
 	outputHeaders, outputBody := ChunkOffHeaders(output)
 
-	// take seed from data
+	// take seed of data
 	inputSeed := TakeSeedOfList(100, inputBody)
 	outputSeed := TakeSeedOfList(100, outputBody)
 
@@ -149,7 +149,7 @@ func Guess(input, output [][]string) []Triplet {
 	tokenizedInputSeedWithHeaders := JoinUpHeaders(inputHeaders, tokenizedInputSeed)
 	tokenizedOutputSeedWithHeaders := JoinUpHeaders(outputHeaders, tokenizedOutputSeed)
 
-	// join two datasets
+	// join two datasets (via Simple joiner) There are also: TfIdf and Naive Bayes joiners
 	triplets := []Triplet{}
 	for _, input := range tokenizedInputSeedWithHeaders {
 		triplets = append(triplets, CalculateBestMatch(MatchBetweenSimple, input, tokenizedOutputSeedWithHeaders))
@@ -158,6 +158,7 @@ func Guess(input, output [][]string) []Triplet {
 	// remove every right, if it is duplicated
 	triplets = CleanUp(triplets)
 	// append every left, that wasn't used
+	triplets = BuildUp(triplets)
 
 	return triplets
 
