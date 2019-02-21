@@ -132,10 +132,33 @@ func Concordance(data []Triplet) [][]string {
 }
 
 // this is a base implementation of a guess function for row guessing
-func BaseGuessRowsFunction(input, output [][]string) ([][]string, []string) {
+func BaseGuessRowsFunction(input, output [][]string, hasDuplicates bool) [][]string {
 	// tokenize data
+	headersOfInput, input := input[0], input[1:]
+	headersOfOutput, output := output[0], output[1:]
+
 	tokenizedInput := ApplyRetokenizeOnSpaceToMatrix(ApplyTokenizerToMatrix(input, TokenizeUnidecode, TokenizeLowercase, TokenizeNumbers, TokenizeAlphaNumericOnly))
 	tokenizedOutput := ApplyRetokenizeOnSpaceToMatrix(ApplyTokenizerToMatrix(output, TokenizeUnidecode, TokenizeLowercase, TokenizeNumbers, TokenizeAlphaNumericOnly))
+
+	// join two datasets (via Simple joiner) There are also: TfIdf and Naive Bayes joiners
+	triplets := []Triplet{}
+	for _, input := range tokenizedInput {
+		triplets = append(triplets, CalculateBestMatch(MatchBetweenSimple, input, tokenizedOutput))
+	}
+
+	// remove duplicate matches
+	if !hasDuplicates {
+		triplets = CleanUp(triplets)
+	}
+
+	triplets = BuildUp(triplets, output)
+	result := append([][]string{}, append(headersOfInput, headersOfOutput...))
+	for index, triplet := range triplets {
+		leftSide := input[index]
+		rightSide := output[triplet.RightIndex]
+		result = append(result, append(leftSide, rightSide...))
+	}
+	return result
 
 }
 
@@ -189,5 +212,4 @@ func BaseGuessColumnsFunction(input, output [][]string) (map[string]string, []st
 		}
 	}
 	return concordance, onlyLeft, onlyRight
-
 }

@@ -17,6 +17,14 @@ func newTestTriplet(score float64, left, right string) Triplet {
 	return Triplet{Left: strings.Split(left, " "), Right: strings.Split(right, " "), Score: score}
 }
 
+func RepeatString(repeat string, times int) []string {
+	result := []string{}
+	for i := 0; i <= times; i++ {
+		result = append(result, repeat)
+	}
+	return result
+}
+
 // will transpose input matrix
 func TransposeMatrix(input [][]string) [][]string {
 
