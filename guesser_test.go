@@ -107,6 +107,27 @@ func TestJoinUpHeaders(t *testing.T) {
 	assert.Equal(t, JoinUpHeaders(headers, body), data)
 }
 
+func TestBaseGuessRowsFunction(t *testing.T) {
+	assert.Equal(t, BaseGuessRowsFunction([][]string{
+		[]string{"City or Country Name in EN"},
+		[]string{"Petersburg"},
+		[]string{"Moscow"},
+		[]string{"France"},
+		[]string{"Lebanon"},
+		[]string{"Bulgaria"},
+	}, [][]string{
+		[]string{"City or Country Name in RU"},
+		[]string{"Moskva"},
+		[]string{"Peterburgh"},
+		[]string{"Frantsia"},
+		[]string{"Livan"},
+		[]string{"Bolgaria"},
+	}, false), "")
+	// TODO: test for empty
+	// TODO: test for duplicates (on right) and on left
+	// TODO: test for non comparables (zero score)
+}
+
 func TestBaseGuessColumnsFunction(t *testing.T) {
 	csv1, err := ReadCSVFile("testdata/input1.csv", ',')
 	csv2, err := ReadCSVFile("testdata/input2.csv", ',')
