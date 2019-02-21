@@ -27,27 +27,9 @@ func Matrix2HashMap(data [][]string) []map[string]string {
 	return jsondata
 }
 
-func WriteJSONFile(fpath string, data [][]string) error {
-	jsondata := Matrix2HashMap(data)
-
-	jsonAsBytes, err := json.Marshal(jsondata)
-	if err != nil {
-		return err
-	}
-	return ioutil.WriteFile(fpath, jsonAsBytes, 0644)
-}
-
-func ReadJSONFile(fpath string) ([][]string, error) {
-	result := [][]string{}
-	bytesOfJson, err := ioutil.ReadFile(fpath)
-	if err != nil {
-		return result, err
-	}
+func HashMap2Matrix(data []map[string]string) [][]string {
 	tempResult := []map[string]string{}
-	err = json.Unmarshal(bytesOfJson, &tempResult)
-	if err != nil {
-		return result, err
-	}
+	result := [][]string{}
 
 	// set up headers for the data down the road
 	tempHeads := map[string]bool{}
@@ -69,5 +51,27 @@ func ReadJSONFile(fpath string) ([][]string, error) {
 		}
 		result = append(result, resultRow)
 	}
-	return result, nil
+	return result
+}
+
+func WriteJSONFile(fpath string, data [][]string) error {
+	jsondata := Matrix2HashMap(data)
+
+	jsonAsBytes, err := json.Marshal(jsondata)
+	if err != nil {
+		return err
+	}
+	return ioutil.WriteFile(fpath, jsonAsBytes, 0644)
+}
+
+func ReadJSONFile(fpath string) ([][]string, error) {
+
+	bytesOfJson, err := ioutil.ReadFile(fpath)
+	if err != nil {
+		return result, err
+	}
+	err = json.Unmarshal(bytesOfJson, &tempResult)
+	if err != nil {
+		return result, err
+	}
 }
