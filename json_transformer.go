@@ -11,7 +11,7 @@ import (
 	"io/ioutil"
 )
 
-func WriteJSONFile(fpath string, data [][]string) error {
+func Matrix2HashMap(data [][]string) []map[string]string {
 	head := data[0]
 	body := data[1:]
 
@@ -24,6 +24,12 @@ func WriteJSONFile(fpath string, data [][]string) error {
 		}
 		jsondata = append(jsondata, row)
 	}
+	return jsondata
+}
+
+func WriteJSONFile(fpath string, data [][]string) error {
+	jsondata := Matrix2HashMap(data)
+
 	jsonAsBytes, err := json.Marshal(jsondata)
 	if err != nil {
 		return err

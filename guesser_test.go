@@ -107,6 +107,12 @@ func TestJoinUpHeaders(t *testing.T) {
 	assert.Equal(t, JoinUpHeaders(headers, body), data)
 }
 
-func TestGuess(t *testing.T) {
+func TestBaseGuessColumnsFunction(t *testing.T) {
+	csv1, err := ReadCSVFile("testdata/input1.csv", ',')
+	csv2, err := ReadCSVFile("testdata/input2.csv", ',')
+	assert.Equal(t, err, nil)
+	assert.Equal(t, err, nil)
+
+	Concordance(BaseGuessColumnsFunction(TransposeMatrix(csv1), TransposeMatrix(csv2)))
 
 }

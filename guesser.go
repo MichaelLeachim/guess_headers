@@ -124,13 +124,14 @@ func JoinUpHeaders(headers []string, body [][]string) [][]string {
 
 func Concordance(data []Triplet) [][]string {
 	result := [][]string{}
+	result = append(result, []string{"Left", "Right"})
 	for _, item := range data {
 		result = append(result, []string{item.Left[0], item.Right[0]})
 	}
 	return result
 }
 
-// this is a base implementation of a guess function for columns guessing
+// this is a base implementation of a guess function for column guessing
 func BaseGuessColumnsFunction(input, output [][]string) []Triplet {
 
 	// chunk off heads of every row
