@@ -132,7 +132,7 @@ func Concordance(data []Triplet) [][]string {
 }
 
 // this is a base implementation of a guess function for column guessing
-func BaseGuessColumnsFunction(input, output [][]string) []Triplet {
+func BaseGuessColumnsFunction(input, output [][]string) (map[string]string, []string, []string) {
 
 	// chunk off heads of every row
 	inputHeaders, inputBody := ChunkOffHeaders(input)
@@ -160,5 +160,26 @@ func BaseGuessColumnsFunction(input, output [][]string) []Triplet {
 	triplets = CleanUp(triplets)
 	// append every left, that wasn't used
 	triplets = BuildUp(triplets, tokenizedOutputSeedWithHeaders)
-	return triplets
+
+	concordance := map[string]string{}
+	onlyLeft := []string{}
+	onlyRight := []string{}
+
+	for _, placeholderName := range Concordance(triplets) {
+		left, right := placeholderName[0], placeholderName[1]
+		if left != "" && right != "" {
+			concordance[left] = right
+			continue
+		}
+		if left != "" {
+			onlyLeft = append(onlyLeft, left)
+			continue
+		}
+		if right != "" {
+			onlyRight = append(onlyRight, right)
+			continue
+		}
+	}
+	return concordance, onlyLeft, onlyRight
+
 }
