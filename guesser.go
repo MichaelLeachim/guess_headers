@@ -22,7 +22,14 @@ import (
 
 // [Reduce amount] Take random N(100) fields of each column of each file (reducing step)
 func TakeSeed(size int, input []string) []string {
+	size = size - 1
+	if size <= 0 {
+		return []string{}
+	}
 	sizeofinput := int32(len(input))
+	if sizeofinput == 0 {
+		return []string{}
+	}
 	result := []string{}
 	for i := 0; i <= size; i++ {
 		result = append(result, input[rand.Int31n(sizeofinput)])
