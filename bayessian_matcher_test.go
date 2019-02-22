@@ -7,12 +7,15 @@
 package main
 
 import (
+	log "github.com/sirupsen/logrus"
 	"github.com/stretchr/testify/assert"
 	"strings"
 	"testing"
 )
 
 func TestMakeBayessianMatcher(t *testing.T) {
+	log.SetLevel(log.DebugLevel)
+
 	splitstr := func(in string) []string {
 		return strings.Split(in, " ")
 	}
@@ -29,16 +32,24 @@ func TestMakeBayessianMatcher(t *testing.T) {
 	}
 	bayessianMatcher := makeBayessianMatcher(data)
 
+	// basic matcher. Should return results if three words randomly taken from the base dataset
 	for _, item := range data {
-		matches, _ := bayessianMatcher(TakeSeed(5, item))
-		assert.Equal(t, matches, item)
+		matches, _ := bayessianMatcher(append(TakeSeed(3, item)))
+		assert.NotEqual(t, matches, -1)
+		assert.Equal(t, item, data[matches])
+	}
+
+	// should match, given 5 words from given category, and 3 words from another category
+	for _, item := range data {
+		matches, _ := bayessianMatcher(append(TakeSeed(5, item), TakeSeed(3, data[1])...))
+		assert.NotEqual(t, matches, -1)
+		assert.Equal(t, item, data[matches])
 	}
 
 	bayessianMatcher = makeBayessianMatcher([][]string{})
 	for _, item := range data {
-		data, _ := bayessianMatcher(item)
-		assert.Equal(t, data, []string{})
-
+		index, _ := bayessianMatcher(item)
+		assert.Equal(t, index, -1)
 	}
 
 }
