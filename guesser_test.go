@@ -88,7 +88,7 @@ func TestCalculateBestMatch(t *testing.T) {
 		[]string{"Hello", "World"},
 		[]string{""},
 		[]string{},
-	}), "")
+	}).RightIndex, 4)
 }
 
 func TestChunkOffHeaders(t *testing.T) {
