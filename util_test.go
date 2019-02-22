@@ -14,6 +14,8 @@ import (
 
 func TestRepeatString(t *testing.T) {
 	assert.Equal(t, RepeatString("", 3), []string{"", "", ""})
+	assert.Equal(t, len(RepeatString("", 3)), 3)
+	assert.Equal(t, len(RepeatString("", 4)), 4)
 	assert.Equal(t, RepeatString("", 0), []string{})
 }
 

@@ -40,14 +40,13 @@ func TestBuildUp(t *testing.T) {
 		[]string{"bar"},
 		[]string{"baz"},
 	}
-
 	resultTriplets := BuildUp(triplets, rightSide)
-	resultTriplets[7].Left = []string{"foo"}
-	resultTriplets[7].Kind = TRIPLET_RIGHT_ONLY
-	resultTriplets[8].Left = []string{"bar"}
-	resultTriplets[8].Kind = TRIPLET_RIGHT_ONLY
-	resultTriplets[9].Left = []string{"baz"}
-	resultTriplets[9].Kind = TRIPLET_RIGHT_ONLY
+	assert.Equal(t, resultTriplets[7].Right, []string{"foo"})
+	assert.Equal(t, resultTriplets[7].Kind, TRIPLET_RIGHT_ONLY)
+	assert.Equal(t, resultTriplets[8].Right, []string{"bar"})
+	assert.Equal(t, resultTriplets[8].Kind, TRIPLET_RIGHT_ONLY)
+	assert.Equal(t, resultTriplets[9].Right, []string{"baz"})
+	assert.Equal(t, resultTriplets[9].Kind, TRIPLET_RIGHT_ONLY)
 }
 
 func TestCleanUp(t *testing.T) {
@@ -124,58 +123,92 @@ func TestJoinUpHeaders(t *testing.T) {
 	assert.Equal(t, JoinUpHeaders(headers, body), data)
 }
 
-func TestBaseGuessRowsFunction(t *testing.T) {
-	assert.Equal(t, BaseGuessRowsFunction([][]string{
-		[]string{"City or Country Name in EN"},
-		[]string{"Petersburg"},
-		[]string{"Moscow"},
-		[]string{"France"},
-		[]string{"Lebanon"},
-		[]string{"Bulgaria"},
-	}, [][]string{
-		[]string{"City or Country Name in RU"},
-		[]string{"Moskva"},
-		[]string{"Peterburgh"},
-		[]string{"Frantsia"},
-		[]string{"Livan"},
-		[]string{"Bolgaria"},
-	}, false), "")
+func TestBaseGuessRowsOnSmallRealWorldData(t *testing.T) {
 	countriesInRU, err := ReadCSVFile("testdata/countries.ru.csv", ',')
 	assert.Equal(t, err, nil)
 	countriesInEN, err := ReadCSVFile("testdata/countries.en.csv", ',')
 	assert.Equal(t, err, nil)
 	assert.Equal(t, BaseGuessRowsFunction(countriesInRU, countriesInEN, false), "")
-	assert.Equal(t, BaseGuessRowsFunction([][]string{}, [][]string{}, false), "")
-	assert.Equal(t, BaseGuessRowsFunction([][]string{
-		[]string{"City Name"},
-		[]string{"Moscow"},
-		[]string{"Moscow"},
-		[]string{"Moscow"},
-		[]string{"Sofia"},
-		[]string{"Sofia"},
-		[]string{"Sofia"},
-	}, [][]string{
-		[]string{"City Name"},
-		[]string{"Moscow"},
-		[]string{"Warshaw"},
-		[]string{"New-York"},
-		[]string{"Berlin"},
-	}, false), "")
-	assert.Equal(t, BaseGuessRowsFunction([][]string{
-		[]string{"City Name"},
-		[]string{"Moscow"},
-		[]string{"Warshaw"},
-		[]string{"New-York"},
-		[]string{"Berlin"},
-	}, [][]string{
-		[]string{"City Name"},
-		[]string{"Moscow"},
-		[]string{"Moscow"},
-		[]string{"Moscow"},
-		[]string{"Sofia"},
-		[]string{"Sofia"},
-		[]string{"Sofia"},
-	}, false), "")
+}
+
+func TestBaseGuessRowsFunction(t *testing.T) {
+	assert.Equal(t,
+		[][]string{
+			[]string{"City or Country Name in EN", "City or Country Name in RU"},
+			[]string{"Petersburg", "Peterburgh"},
+			[]string{"Moscow", "Moskva"},
+			[]string{"France", "Frantsia"},
+			[]string{"Lebanon", ""},
+			[]string{"Bulgaria", "Bolgaria"},
+			[]string{"", "Livan"}},
+		BaseGuessRowsFunction([][]string{
+			[]string{"City or Country Name in EN"},
+			[]string{"Petersburg"},
+			[]string{"Moscow"},
+			[]string{"France"},
+			[]string{"Lebanon"},
+			[]string{"Bulgaria"},
+		}, [][]string{
+			[]string{"City or Country Name in RU"},
+			[]string{"Moskva"},
+			[]string{"Peterburgh"},
+			[]string{"Frantsia"},
+			[]string{"Livan"},
+			[]string{"Bolgaria"},
+		}, false))
+
+	assert.Equal(t, BaseGuessRowsFunction([][]string{}, [][]string{}, false), [][]string{})
+
+	assert.Equal(t,
+		[][]string{
+			[]string{"City Name", "City Name"},
+			[]string{"Moscow", "Moscow"},
+			[]string{"Moskva", "Moscow"},
+			[]string{"Maskov", "Moscow"},
+			[]string{"Sofia", "Moscow"},
+			[]string{"Sofia", "Moscow"},
+			[]string{"Sofia", "Moscow"},
+			[]string{"", "Warshaw"},
+			[]string{"", "New-York"},
+			[]string{"", "Berlin"}},
+		BaseGuessRowsFunction([][]string{
+			[]string{"City Name"},
+			[]string{"Moscow"},
+			[]string{"Moskva"},
+			[]string{"Maskov"},
+			[]string{"Sofia"},
+			[]string{"Sofia"},
+			[]string{"Sofia"},
+		}, [][]string{
+			[]string{"City Name"},
+			[]string{"Moscow"},
+			[]string{"Warshaw"},
+			[]string{"New-York"},
+			[]string{"Berlin"},
+		}, true))
+	assert.Equal(t,
+		[][]string{[]string{"City Name", "City Name"},
+			[]string{"Moscow", "Moscow"},
+			[]string{"Warshaw", ""},
+			[]string{"New-York", ""},
+			[]string{"Berlin", ""},
+			[]string{"", "Sofia"}},
+
+		BaseGuessRowsFunction([][]string{
+			[]string{"City Name"},
+			[]string{"Moscow"},
+			[]string{"Warshaw"},
+			[]string{"New-York"},
+			[]string{"Berlin"},
+		}, [][]string{
+			[]string{"City Name"},
+			[]string{"Moscow"},
+			[]string{"Moscow"},
+			[]string{"Moscow"},
+			[]string{"Sofia"},
+			[]string{"Sofia"},
+			[]string{"Sofia"},
+		}, false))
 
 	assert.Equal(t, BaseGuessRowsFunction([][]string{},
 		[][]string{
@@ -186,7 +219,7 @@ func TestBaseGuessRowsFunction(t *testing.T) {
 			[]string{"Sofia"},
 			[]string{"Sofia"},
 			[]string{"Sofia"},
-		}, false), "")
+		}, false), [][]string{})
 	assert.Equal(t, BaseGuessRowsFunction(
 		[][]string{
 			[]string{"City Name"},
@@ -196,11 +229,7 @@ func TestBaseGuessRowsFunction(t *testing.T) {
 			[]string{"Sofia"},
 			[]string{"Sofia"},
 			[]string{"Sofia"},
-		}, [][]string{}, false), "")
-
-	// TODO: test for empty
-	// TODO: test for duplicates (on right) and on left
-	// TODO: test for non comparables (zero score)
+		}, [][]string{}, false), [][]string{})
 }
 
 func TestBaseGuessColumnsFunction(t *testing.T) {

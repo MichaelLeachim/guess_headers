@@ -8,6 +8,7 @@ package main
 
 import (
 	log "github.com/sirupsen/logrus"
+	"math"
 	"math/rand"
 	"strings"
 )
@@ -63,7 +64,7 @@ func MatchBetweenSimple(input1, input2 []string) float64 {
 
 // Chooses something from input2 that matches input1 in the best way
 func CalculateBestMatch(scoreFn func([]string, []string) float64, input1 []string, input2 [][]string) Triplet {
-	best := float64(0.0)
+	best := float64(math.MinInt32)
 	bestItem := Triplet{}
 	for index, input2 := range input2 {
 		score := scoreFn(input1, input2)
@@ -83,13 +84,18 @@ func BuildUp(triplets []Triplet, rightSide [][]string) []Triplet {
 	for _, triplet := range triplets {
 		rightStore[strings.Join(triplet.Right, "")] = true
 	}
-	for _, row := range rightSide {
+	noduplicates := map[string]bool{}
+
+	for index, row := range rightSide {
 		// already have this data matched
-		if rightStore[strings.Join(row, "")] {
+		rowString := strings.Join(row, "")
+		if rightStore[rowString] == true || noduplicates[rowString] == true {
 			continue
 		}
 		// this data is unmatched, so, add it
-		triplets = append(triplets, Triplet{Left: []string{}, Right: row, Score: 0, Kind: TRIPLET_RIGHT_ONLY})
+		triplets = append(triplets, Triplet{Left: []string{}, Right: row, RightIndex: index, Score: 0, Kind: TRIPLET_RIGHT_ONLY})
+		noduplicates[strings.Join(row, "")] = true
+
 	}
 	return triplets
 }
@@ -156,14 +162,17 @@ func JoinUpHeaders(headers []string, body [][]string) [][]string {
 
 // this is a base implementation of a guess function for row guessing
 func BaseGuessRowsFunction(input, output [][]string, hasDuplicates bool) [][]string {
+	if len(input) == 0 || len(output) == 0 {
+		return [][]string{}
+	}
 	// tokenize data
 	headersOfInput, input := input[0], input[1:]
 	headersOfOutput, output := output[0], output[1:]
 	padInput := RepeatString("", len(headersOfInput))
 	padOutput := RepeatString("", len(headersOfOutput))
 
-	tokenizedInput := ApplyRetokenizeOnSpaceToMatrix(ApplyTokenizerToMatrix(input, TokenizeUnidecode, TokenizeLowercase, TokenizeNumbers, TokenizeAlphaNumericOnly))
-	tokenizedOutput := ApplyRetokenizeOnSpaceToMatrix(ApplyTokenizerToMatrix(output, TokenizeUnidecode, TokenizeLowercase, TokenizeNumbers, TokenizeAlphaNumericOnly))
+	tokenizedInput := ApplyRetokenizeOnSpaceToMatrix(ApplyTokenizerToMatrix(input, TokenizeUnidecode, TokenizeLowercase, TokenizeAlphaNumericOnly, ShinglifyTokenizedString3))
+	tokenizedOutput := ApplyRetokenizeOnSpaceToMatrix(ApplyTokenizerToMatrix(output, TokenizeUnidecode, TokenizeLowercase, TokenizeAlphaNumericOnly, ShinglifyTokenizedString3))
 
 	// join two datasets (via Simple joiner) There are also: TfIdf and Naive Bayes joiners
 	triplets := []Triplet{}
@@ -176,7 +185,7 @@ func BaseGuessRowsFunction(input, output [][]string, hasDuplicates bool) [][]str
 		triplets = CleanUp(triplets)
 	}
 
-	triplets = BuildUp(triplets, output)
+	triplets = BuildUp(triplets, tokenizedOutput)
 	result := append([][]string{}, append(headersOfInput, headersOfOutput...))
 	for index, triplet := range triplets {
 		switch triplet.Kind {
@@ -186,6 +195,8 @@ func BaseGuessRowsFunction(input, output [][]string, hasDuplicates bool) [][]str
 			result = append(result, append(input[index], padOutput...))
 		case TRIPLET_RIGHT_ONLY:
 			result = append(result, append(padInput, output[triplet.RightIndex]...))
+		default:
+			log.Fatal("Triplet does not have kind", input[index], output[triplet.RightIndex], index, triplet)
 		}
 	}
 	return result

@@ -19,7 +19,7 @@ func newTestTriplet(score float64, left, right string, kind int) Triplet {
 
 func RepeatString(repeat string, times int) []string {
 	result := []string{}
-	for i := 0; i <= times; i++ {
+	for i := 0; i < times; i++ {
 		result = append(result, repeat)
 	}
 	return result
