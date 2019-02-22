@@ -7,7 +7,7 @@
 package main
 
 import (
-	log "github.com/sirupsen/logrus"
+	// log "github.com/sirupsen/logrus"
 	"github.com/stretchr/testify/assert"
 	"strings"
 	"testing"
@@ -57,7 +57,7 @@ func TestMakeBayessianMatcherRealDataNotTokenized(t *testing.T) {
 }
 
 func TestMakeBayessianMatcher(t *testing.T) {
-	log.SetLevel(log.DebugLevel)
+	// log.SetLevel(log.DebugLevel)
 
 	splitstr := func(in string) []string {
 		return strings.Split(in, " ")

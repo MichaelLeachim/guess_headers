@@ -124,11 +124,29 @@ func TestJoinUpHeaders(t *testing.T) {
 }
 
 func TestBaseGuessRowsOnSmallRealWorldData(t *testing.T) {
+	log.SetLevel(log.FatalLevel)
 	countriesInRU, err := ReadCSVFile("testdata/countries.ru.csv", ',')
 	assert.Equal(t, err, nil)
 	countriesInEN, err := ReadCSVFile("testdata/countries.en.csv", ',')
 	assert.Equal(t, err, nil)
-	assert.Equal(t, BaseGuessRowsFunction(countriesInRU, countriesInEN, false), "")
+	countriesInRU = append(countriesInRU, []string{"Country Name"})
+	countriesInEN = append(countriesInEN, []string{"Country Name"})
+	assert.Equal(t, len(countriesInRU), 211)
+	assert.Equal(t, len(countriesInEN), 211)
+	matches := func(bgrf [][]string) int {
+		matches := 0
+		for index, item := range bgrf {
+			guessedRU, guessedEN := item[0], item[1]
+			if guessedEN != "" && guessedRU != "" && countriesInEN[index][0] == guessedEN && countriesInRU[index][0] == guessedRU {
+				matches += 1
+			}
+		}
+		return matches
+	}
+	assert.Equal(t, matches(BaseGuessRowsFunction(countriesInRU, countriesInEN, MATCH_BAYES, false)), 153)
+	assert.Equal(t, matches(BaseGuessRowsFunction(countriesInRU, countriesInEN, MATCH_SIMPLE, false)), 150)
+	assert.Equal(t, matches(BaseGuessRowsFunction(countriesInRU, countriesInEN, MATCH_TFIDF, false)), 62)
+
 }
 
 func TestBaseGuessRowsFunction(t *testing.T) {
@@ -155,9 +173,9 @@ func TestBaseGuessRowsFunction(t *testing.T) {
 			[]string{"Frantsia"},
 			[]string{"Livan"},
 			[]string{"Bolgaria"},
-		}, false))
+		}, MATCH_SIMPLE, false))
 
-	assert.Equal(t, BaseGuessRowsFunction([][]string{}, [][]string{}, false), [][]string{})
+	assert.Equal(t, BaseGuessRowsFunction([][]string{}, [][]string{}, MATCH_SIMPLE, false), [][]string{})
 
 	assert.Equal(t,
 		[][]string{
@@ -185,7 +203,7 @@ func TestBaseGuessRowsFunction(t *testing.T) {
 			[]string{"Warshaw"},
 			[]string{"New-York"},
 			[]string{"Berlin"},
-		}, true))
+		}, MATCH_SIMPLE, true))
 	assert.Equal(t,
 		[][]string{[]string{"City Name", "City Name"},
 			[]string{"Moscow", "Moscow"},
@@ -208,7 +226,7 @@ func TestBaseGuessRowsFunction(t *testing.T) {
 			[]string{"Sofia"},
 			[]string{"Sofia"},
 			[]string{"Sofia"},
-		}, false))
+		}, MATCH_SIMPLE, false))
 
 	assert.Equal(t, BaseGuessRowsFunction([][]string{},
 		[][]string{
@@ -219,7 +237,7 @@ func TestBaseGuessRowsFunction(t *testing.T) {
 			[]string{"Sofia"},
 			[]string{"Sofia"},
 			[]string{"Sofia"},
-		}, false), [][]string{})
+		}, MATCH_SIMPLE, false), [][]string{})
 	assert.Equal(t, BaseGuessRowsFunction(
 		[][]string{
 			[]string{"City Name"},
@@ -229,7 +247,7 @@ func TestBaseGuessRowsFunction(t *testing.T) {
 			[]string{"Sofia"},
 			[]string{"Sofia"},
 			[]string{"Sofia"},
-		}, [][]string{}, false), [][]string{})
+		}, [][]string{}, MATCH_SIMPLE, false), [][]string{})
 }
 
 func TestBaseGuessColumnsFunction(t *testing.T) {

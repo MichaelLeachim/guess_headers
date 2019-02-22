@@ -161,7 +161,7 @@ func JoinUpHeaders(headers []string, body [][]string) [][]string {
 }
 
 // this is a base implementation of a guess function for row guessing
-func BaseGuessRowsFunction(input, output [][]string, hasDuplicates bool) [][]string {
+func BaseGuessRowsFunction(input, output [][]string, method int, hasDuplicates bool) [][]string {
 	if len(input) == 0 || len(output) == 0 {
 		return [][]string{}
 	}
@@ -176,8 +176,23 @@ func BaseGuessRowsFunction(input, output [][]string, hasDuplicates bool) [][]str
 
 	// join two datasets (via Simple joiner) There are also: TfIdf and Naive Bayes joiners
 	triplets := []Triplet{}
-	for _, input := range tokenizedInput {
-		triplets = append(triplets, CalculateBestMatch(MatchBetweenSimple, input, tokenizedOutput))
+	switch method {
+	case MATCH_BAYES:
+		bayessianMatcher := makeBayessianMatcher(tokenizedOutput)
+		for _, input := range tokenizedInput {
+			rowIndex, score := bayessianMatcher(input)
+			triplets = append(triplets, Triplet{Left: input, Right: tokenizedOutput[rowIndex], RightIndex: rowIndex, Score: score, Kind: TRIPLET_BOTH_MATCH})
+		}
+	case MATCH_SIMPLE:
+		for _, input := range tokenizedInput {
+			triplets = append(triplets, CalculateBestMatch(MatchBetweenSimple, input, tokenizedOutput))
+		}
+	case MATCH_TFIDF:
+		tfIDFMatcher := makeTFIDFMatcher(tokenizedOutput)
+		for _, input := range tokenizedInput {
+			rowIndex, score := tfIDFMatcher(input)
+			triplets = append(triplets, Triplet{Left: input, Right: tokenizedOutput[rowIndex], RightIndex: rowIndex, Score: score, Kind: TRIPLET_BOTH_MATCH})
+		}
 	}
 
 	// remove duplicate matches
