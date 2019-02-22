@@ -43,6 +43,22 @@ func TokenizeNumbers(number string) string {
 	return strings.Join(result, " ")
 }
 
+func ShinglifyString(shingleSize int, data string) string {
+	result := []string{}
+	for i := 0; i <= len(data)-shingleSize; i++ {
+		result = append(result, data[i:i+shingleSize])
+	}
+	return strings.Join(result, " ")
+}
+
+func ShinglifyTokenizedString(shingleSize int, data string) string {
+	result := []string{}
+	for _, item := range strings.Split(data, " ") {
+		result = append(result, strings.TrimSpace(ShinglifyString(shingleSize, item)))
+	}
+	return strings.Join(result, " ")
+}
+
 // will lose field information
 func ReTokenizeOnSpace(data []string) []string {
 	return strings.Split(strings.Join(data, " "), " ")

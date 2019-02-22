@@ -24,3 +24,8 @@ func TestTokenizeNumbers(t *testing.T) {
 	assert.Equal(t, TokenizeNumbers("1920"), "1900 900 20 0")
 	assert.Equal(t, TokenizeNumbers("0.00345"), "0.003 0.0004 0.00005")
 }
+
+func TestShinglifyTokenizedString(t *testing.T) {
+	assert.Equal(t, ShinglifyTokenizedString(3, "Hello world"), "Hel ell llo wor orl rld")
+
+}
