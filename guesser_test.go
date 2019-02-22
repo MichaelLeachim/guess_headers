@@ -123,9 +123,68 @@ func TestBaseGuessRowsFunction(t *testing.T) {
 		[]string{"Livan"},
 		[]string{"Bolgaria"},
 	}, false), "")
+	countriesInRU, err := ReadCSVFile("testdata/countries.ru.csv", ',')
+	assert.Equal(t, err, nil)
+	countriesInEN, err := ReadCSVFile("testdata/countries.en.csv", ',')
+	assert.Equal(t, err, nil)
+	assert.Equal(t, BaseGuessRowsFunction(countriesInRU, countriesInEN, false), "")
+	assert.Equal(t, BaseGuessRowsFunction([][]string{}, [][]string{}, false), "")
+	assert.Equal(t, BaseGuessRowsFunction([][]string{
+		[]string{"City Name"},
+		[]string{"Moscow"},
+		[]string{"Moscow"},
+		[]string{"Moscow"},
+		[]string{"Sofia"},
+		[]string{"Sofia"},
+		[]string{"Sofia"},
+	}, [][]string{
+		[]string{"City Name"},
+		[]string{"Moscow"},
+		[]string{"Warshaw"},
+		[]string{"New-York"},
+		[]string{"Berlin"},
+	}, false), "")
+	assert.Equal(t, BaseGuessRowsFunction([][]string{
+		[]string{"City Name"},
+		[]string{"Moscow"},
+		[]string{"Warshaw"},
+		[]string{"New-York"},
+		[]string{"Berlin"},
+	}, [][]string{
+		[]string{"City Name"},
+		[]string{"Moscow"},
+		[]string{"Moscow"},
+		[]string{"Moscow"},
+		[]string{"Sofia"},
+		[]string{"Sofia"},
+		[]string{"Sofia"},
+	}, false), "")
+
+	assert.Equal(t, BaseGuessRowsFunction([][]string{},
+		[][]string{
+			[]string{"City Name"},
+			[]string{"Moscow"},
+			[]string{"Moscow"},
+			[]string{"Moscow"},
+			[]string{"Sofia"},
+			[]string{"Sofia"},
+			[]string{"Sofia"},
+		}, false), "")
+	assert.Equal(t, BaseGuessRowsFunction(
+		[][]string{
+			[]string{"City Name"},
+			[]string{"Moscow"},
+			[]string{"Moscow"},
+			[]string{"Moscow"},
+			[]string{"Sofia"},
+			[]string{"Sofia"},
+			[]string{"Sofia"},
+		}, [][]string{}, false), "")
+
 	// TODO: test for empty
 	// TODO: test for duplicates (on right) and on left
 	// TODO: test for non comparables (zero score)
+
 }
 
 func TestBaseGuessColumnsFunction(t *testing.T) {
