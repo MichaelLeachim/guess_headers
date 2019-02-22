@@ -96,14 +96,18 @@ func TestChunkOffHeaders(t *testing.T) {
 	assert.Equal(t, headers, []string{})
 	assert.Equal(t, body, [][]string{})
 
+	// headers, body = ChunkOffHeaders([][]string{[]string{"Ha"}, []string{"Ho"}})
+	// assert.Equal(t, headers, []string{"Ha", "Ho"})
+	// assert.Equal(t, body, [][]string{})
+
 	headers, body = ChunkOffHeaders([][]string{
 		[]string{"name", "Michael"},
 		[]string{"surname", "Leahcim"},
 		[]string{"NoBody"},
 		[]string{}})
 
-	assert.Equal(t, headers, []string{})
-	assert.Equal(t, body, [][]string{})
+	assert.Equal(t, headers, []string{"name", "surname", "NoBody", ""})
+	assert.Equal(t, body, [][]string{[]string{"Michael"}, []string{"Leahcim"}, []string{}, []string{}})
 }
 
 func TestJoinUpHeaders(t *testing.T) {

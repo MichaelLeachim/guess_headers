@@ -124,12 +124,24 @@ func CleanUp(data []Triplet) []Triplet {
 
 // will take headers of every column in a given input
 func ChunkOffHeaders(input [][]string) ([]string, [][]string) {
+	if len(input) == 0 {
+		return []string{}, [][]string{}
+	}
 	headers := []string{}
 	body := [][]string{}
 
 	for _, point := range input {
-		headers = append(headers, point[0])
-		body = append(body, point[0:])
+		switch len(point) {
+		case 0:
+			headers = append(headers, "")
+			body = append(body, []string{})
+		case 1:
+			headers = append(headers, point[0])
+			body = append(body, []string{})
+		default:
+			headers = append(headers, point[0])
+			body = append(body, point[1:])
+		}
 	}
 	return headers, body
 }
