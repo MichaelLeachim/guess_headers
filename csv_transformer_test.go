@@ -8,6 +8,7 @@
 package main
 
 import (
+	log "github.com/sirupsen/logrus"
 	"github.com/stretchr/testify/assert"
 	"io/ioutil"
 	"os"
@@ -26,6 +27,7 @@ func TestReadCSVFile(t *testing.T) {
 }
 
 func TestWriteCSVFile(t *testing.T) {
+	log.SetLevel(log.DebugLevel)
 
 	tmpfile, err := ioutil.TempFile("", "tmp_csv_file")
 	assert.Equal(t, err, nil)
@@ -38,6 +40,9 @@ func TestWriteCSVFile(t *testing.T) {
 	assert.Equal(t, WriteCSVFile(tmpfile.Name(), csv), nil)
 	// read again
 	csv2, err := ReadCSVFile(tmpfile.Name(), ',')
+	log.Debug("Name of the temp file is: ", tmpfile.Name())
+
+	assert.Equal(t, err, nil)
 	// assume equals
 	assert.Equal(t, csv, csv2)
 }

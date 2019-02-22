@@ -22,13 +22,13 @@ func WriteCSVFile(fpath string, data [][]string) error {
 	defer file.Close()
 
 	writer := csv.NewWriter(file)
-	writer.Flush()
 	for _, value := range data {
 		err := writer.Write(value)
 		if err != nil {
 			return err
 		}
 	}
+	writer.Flush()
 	return writer.Error()
 }
 
