@@ -35,7 +35,7 @@ func WriteCSVFile(fpath string, data [][]string) error {
 func ReadCSVFile(fpath string, comma rune) ([][]string, error) {
 	result := [][]string{}
 
-	csvFile, err := os.Open("people.csv")
+	csvFile, err := os.Open(fpath)
 	if err != nil {
 		return result, err
 	}

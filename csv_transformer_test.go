@@ -17,9 +17,12 @@ import (
 func TestReadCSVFile(t *testing.T) {
 	csv, err := ReadCSVFile("testdata/input1.csv", ',')
 	assert.Equal(t, err, nil)
-	assert.Equal(t, csv[0], "")
-	transposedCsv := TransposeMatrix(csv)
-	assert.Equal(t, transposedCsv[0], "")
+	assert.Equal(t, csv[0],
+		[]string{"date", "docid", "title", "author", "pubinfo", "", "description", "condition", "price", "shipping", "Place"})
+	headers, body := ChunkOffHeaders(TransposeMatrix(csv))
+	assert.Equal(t, headers, []string([]string{"date", "docid", "title", "author", "pubinfo", "", "description", "condition", "price", "shipping", "Place", ""}))
+	assert.Equal(t, body[11], []string{"", "", "", "", "", ""})
+
 }
 
 func TestWriteCSVFile(t *testing.T) {
