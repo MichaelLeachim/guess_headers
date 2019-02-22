@@ -13,6 +13,21 @@ import (
 	"testing"
 )
 
+func TestMakeBayessianMatcherRealData(t *testing.T) {
+	// check on small real dataset
+	ruCountry, _ := ReadCSVFile("testdata/countries.ru.csv", ',')
+	enCountry, err := ReadCSVFile("testdata/countries.en.csv", ',')
+	assert.Equal(t, err, nil)
+	assert.Equal(t, len(ruCountry), 210)
+	assert.Equal(t, len(enCountry), 210)
+	bayessianMatcher := makeBayessianMatcher(ruCountry)
+	for index, item := range enCountry {
+		matchIndex, score := bayessianMatcher(item)
+		assert.Equal(t, index, matchIndex)
+		assert.Equal(t, score, -1)
+	}
+}
+
 func TestMakeBayessianMatcher(t *testing.T) {
 	log.SetLevel(log.DebugLevel)
 
@@ -51,15 +66,6 @@ func TestMakeBayessianMatcher(t *testing.T) {
 	for _, item := range data {
 		index, _ := bayessianMatcher(item)
 		assert.Equal(t, index, -1)
-	}
-	// check on small real dataset
-	ruCountry, _ := ReadCSVFile("testdata/countries.ru.csv", ',')
-	enCountry, _ := ReadCSVFile("testdata/countries.en.csv", ',')
-	bayessianMatcher = makeBayessianMatcher(ruCountry)
-	for index, item := range enCountry {
-		matchIndex, score := bayessianMatcher(item)
-		assert.Equal(t, index, matchIndex)
-		assert.Equal(t, score, -1)
 	}
 
 }
