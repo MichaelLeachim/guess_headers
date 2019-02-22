@@ -35,9 +35,9 @@ func TestTFIDFMatcher(t *testing.T) {
 		assert.Equal(t, matches, item)
 	}
 
-	bayessianMatcher = makeTFIDFMatcher([][]string{})
+	tfidfMatcher = makeTFIDFMatcher([][]string{})
 	for _, item := range data {
-		data, score := tfidfMatcher(item)
+		data, _ := tfidfMatcher(item)
 		assert.Equal(t, data, []string{})
 
 	}

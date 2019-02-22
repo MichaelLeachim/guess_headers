@@ -184,7 +184,6 @@ func TestBaseGuessRowsFunction(t *testing.T) {
 	// TODO: test for empty
 	// TODO: test for duplicates (on right) and on left
 	// TODO: test for non comparables (zero score)
-
 }
 
 func TestBaseGuessColumnsFunction(t *testing.T) {

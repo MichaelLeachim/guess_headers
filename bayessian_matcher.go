@@ -27,7 +27,7 @@ func makeBayessianMatcher(input [][]string) func(a []string) (int, float64) {
 	wordGivenCategory := map[string]map[string]uint32{}
 
 	// iterate over data and do traning
-	for index, row := range input {
+	for _, row := range input {
 		cat := cat2String(row)
 		// training P(Category)
 		category[cat] += 1
@@ -35,7 +35,7 @@ func makeBayessianMatcher(input [][]string) func(a []string) (int, float64) {
 
 		wordGivenCategoryCat, ok := wordGivenCategory[cat]
 		if !ok {
-			wordGivenCategoryCat := map[string]uint32{}
+			wordGivenCategoryCat = map[string]uint32{}
 		}
 
 		for _, cell := range row {

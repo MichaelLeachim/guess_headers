@@ -36,7 +36,7 @@ func TestMakeBayessianMatcher(t *testing.T) {
 
 	bayessianMatcher = makeBayessianMatcher([][]string{})
 	for _, item := range data {
-		data, score := bayessianMatcher(item)
+		data, _ := bayessianMatcher(item)
 		assert.Equal(t, data, []string{})
 
 	}
