@@ -46,10 +46,20 @@ func TestMakeBayessianMatcher(t *testing.T) {
 		assert.Equal(t, item, data[matches])
 	}
 
+	// check empty
 	bayessianMatcher = makeBayessianMatcher([][]string{})
 	for _, item := range data {
 		index, _ := bayessianMatcher(item)
 		assert.Equal(t, index, -1)
+	}
+	// check on small real dataset
+	ruCountry, _ := ReadCSVFile("testdata/countries.ru.csv", ',')
+	enCountry, _ := ReadCSVFile("testdata/countries.en.csv", ',')
+	bayessianMatcher = makeBayessianMatcher(ruCountry)
+	for index, item := range enCountry {
+		matchIndex, score := bayessianMatcher(item)
+		assert.Equal(t, index, matchIndex)
+		assert.Equal(t, score, -1)
 	}
 
 }
