@@ -22,7 +22,7 @@ func TestReadCSVFile(t *testing.T) {
 		[]string{"date", "docid", "title", "author", "pubinfo", "", "description", "condition", "price", "shipping", "Place"})
 	headers, body := ChunkOffHeaders(TransposeMatrix(csv))
 	assert.Equal(t, headers, []string([]string{"date", "docid", "title", "author", "pubinfo", "", "description", "condition", "price", "shipping", "Place", ""}))
-	assert.Equal(t, body[11], []string{"", "", "", "", "", ""})
+	assert.Equal(t, body[11], []string{"", "", "", "", ""})
 
 }
 

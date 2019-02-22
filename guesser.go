@@ -155,6 +155,10 @@ func ChunkOffHeaders(input [][]string) ([]string, [][]string) {
 // the opposite function of ChunkOffHeaders
 func JoinUpHeaders(headers []string, body [][]string) [][]string {
 	for index, point := range body {
+		if (headers[index]) == "" {
+			body[index] = point
+			continue
+		}
 		body[index] = append([]string{headers[index]}, point...)
 	}
 	return body
