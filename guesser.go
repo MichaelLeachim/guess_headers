@@ -7,6 +7,7 @@
 package main
 
 import (
+	log "github.com/sirupsen/logrus"
 	"math/rand"
 	"strings"
 )
@@ -91,17 +92,27 @@ func BuildUp(triplets []Triplet, rightSide [][]string) []Triplet {
 }
 
 // [Cleanup] Assume that there is only single best match. If it is taken, there is nothing left (the match is nil)
+// The idea is: if right side has duplicates, remove those duplicated, that has lower match score
+
 func CleanUp(data []Triplet) []Triplet {
 	scores := map[string]float64{}
+
+	// accumulate <scores> data
 	for _, item := range data {
-		score, ok := scores[strings.Join(item.Right, "")]
-		if ok && (score <= item.Score) {
-			scores[strings.Join(item.Right, "")] = item.Score
+		rightSide := strings.Join(item.Right, "")
+		score := scores[rightSide]
+
+		if item.Score > score {
+			scores[rightSide] = item.Score
 		}
 	}
+
+	// using the <scores> data, remove duplicates with lower scores
 	for index, item := range data {
 		score, ok := scores[strings.Join(item.Right, "")]
-		if ok && (score <= item.Score) {
+		log.Debug("Score is: ", score)
+		if ok && (item.Score < score) {
+			log.Debug("Sets left triplet:", item.Score, score)
 			data[index].Kind = TRIPLET_LEFT_ONLY
 		}
 	}

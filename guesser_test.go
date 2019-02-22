@@ -8,6 +8,7 @@
 package main
 
 import (
+	log "github.com/sirupsen/logrus"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )
@@ -21,13 +22,13 @@ func TestTakeSeed(t *testing.T) {
 
 func TestBuildUp(t *testing.T) {
 	triplets := []Triplet{
-		newTestTriplet(1.0, "1912", "1912"),
-		newTestTriplet(0.5, "1912 blab", "1912 blob"),
-		newTestTriplet(0.0, "hello", "world"),
-		newTestTriplet(0.3, "whatever", "never"),
-		newTestTriplet(1.0, "never", "never"),
-		newTestTriplet(1.0, "alltimes", "alltimes"),
-		newTestTriplet(0.7, "sometimes", "alltimes"),
+		newTestTriplet(1.0, "1912", "1912", TRIPLET_BOTH_MATCH),
+		newTestTriplet(0.5, "1912 blab", "1912 blob", TRIPLET_BOTH_MATCH),
+		newTestTriplet(0.0, "hello", "world", TRIPLET_BOTH_MATCH),
+		newTestTriplet(0.3, "whatever", "never", TRIPLET_BOTH_MATCH),
+		newTestTriplet(1.0, "never", "never", TRIPLET_BOTH_MATCH),
+		newTestTriplet(1.0, "alltimes", "alltimes", TRIPLET_BOTH_MATCH),
+		newTestTriplet(0.7, "sometimes", "alltimes", TRIPLET_BOTH_MATCH),
 	}
 	rightSide := [][]string{
 		[]string{"1912"},
@@ -42,22 +43,32 @@ func TestBuildUp(t *testing.T) {
 
 	resultTriplets := BuildUp(triplets, rightSide)
 	resultTriplets[7].Left = []string{"foo"}
+	resultTriplets[7].Kind = TRIPLET_RIGHT_ONLY
 	resultTriplets[8].Left = []string{"bar"}
+	resultTriplets[8].Kind = TRIPLET_RIGHT_ONLY
 	resultTriplets[9].Left = []string{"baz"}
-
+	resultTriplets[9].Kind = TRIPLET_RIGHT_ONLY
 }
 
 func TestCleanUp(t *testing.T) {
+	log.SetLevel(log.DebugLevel)
 	x := []Triplet{
-		newTestTriplet(1.0, "1912", "1912"),
-		newTestTriplet(0.5, "1912 blab", "1912 blob"),
-		newTestTriplet(0.0, "hello", "world"),
-		newTestTriplet(0.3, "whatever", "never"),
-		newTestTriplet(1.0, "never", "never"),
-		newTestTriplet(1.0, "alltimes", "alltimes"),
-		newTestTriplet(0.7, "sometimes", "alltimes"),
+		newTestTriplet(1.0, "1912", "1912", TRIPLET_BOTH_MATCH),
+		newTestTriplet(0.5, "1912 blab", "1912 blob", TRIPLET_BOTH_MATCH),
+		newTestTriplet(0.0, "hello", "world", TRIPLET_BOTH_MATCH),
+		newTestTriplet(0.3, "whatever", "never", TRIPLET_BOTH_MATCH),
+		newTestTriplet(1.0, "never", "never", TRIPLET_BOTH_MATCH),
+		newTestTriplet(1.0, "alltimes", "alltimes", TRIPLET_BOTH_MATCH),
+		newTestTriplet(0.7, "sometimes", "alltimes", TRIPLET_BOTH_MATCH),
 	}
-	assert.Equal(t, CleanUp(x), "")
+	clap := CleanUp(x)
+	assert.Equal(t, clap[0].Kind, TRIPLET_BOTH_MATCH)
+	assert.Equal(t, clap[1].Kind, TRIPLET_BOTH_MATCH)
+	assert.Equal(t, clap[2].Kind, TRIPLET_BOTH_MATCH)
+	assert.Equal(t, clap[3].Kind, TRIPLET_LEFT_ONLY)
+	assert.Equal(t, clap[4].Kind, TRIPLET_BOTH_MATCH)
+	assert.Equal(t, clap[5].Kind, TRIPLET_BOTH_MATCH)
+	assert.Equal(t, clap[6].Kind, TRIPLET_LEFT_ONLY)
 }
 
 func TestMatchBetweenSimple(t *testing.T) {

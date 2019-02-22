@@ -13,8 +13,8 @@ import (
 
 // usually, there is no need in creating triplets by hand,
 // but for test reasons
-func newTestTriplet(score float64, left, right string) Triplet {
-	return Triplet{Left: strings.Split(left, " "), Right: strings.Split(right, " "), Score: score}
+func newTestTriplet(score float64, left, right string, kind int) Triplet {
+	return Triplet{Left: strings.Split(left, " "), Right: strings.Split(right, " "), Score: score, Kind: kind}
 }
 
 func RepeatString(repeat string, times int) []string {
