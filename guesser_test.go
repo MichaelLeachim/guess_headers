@@ -72,10 +72,11 @@ func TestCleanUp(t *testing.T) {
 }
 
 func TestMatchBetweenSimple(t *testing.T) {
-	assert.Equal(t, MatchBetweenSimple([]string{"hello", "world", "foo", "bar"}, []string{"hello", "world"}), "")
-	assert.Equal(t, MatchBetweenSimple([]string{}, []string{"hello", "world"}), "")
-	assert.Equal(t, MatchBetweenSimple([]string{}, []string{}), "")
-	assert.Equal(t, MatchBetweenSimple([]string{"A"}, []string{"B"}), "")
+	assert.Equal(t, MatchBetweenSimple([]string{"hello", "world", "foo", "bar"}, []string{"hello", "world"}), 0.5)
+	assert.Equal(t, MatchBetweenSimple([]string{"A", "B", "C"}, []string{"A", "B"}), 0.6666666666666666)
+	assert.Equal(t, MatchBetweenSimple([]string{}, []string{"hello", "world"}), 0.0)
+	assert.Equal(t, MatchBetweenSimple([]string{}, []string{}), 1.0)
+	assert.Equal(t, MatchBetweenSimple([]string{"A"}, []string{"B"}), 0.0)
 }
 
 func TestCalculateBestMatch(t *testing.T) {

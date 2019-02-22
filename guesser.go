@@ -48,6 +48,9 @@ func TakeSeedOfList(size int, input [][]string) [][]string {
 
 func MatchBetweenSimple(input1, input2 []string) float64 {
 	matches := 0
+	if len(input1) == 0 && len(input2) == 0 {
+		return 1
+	}
 	for _, input1 := range input1 {
 		for _, input2 := range input2 {
 			if input1 == input2 {
