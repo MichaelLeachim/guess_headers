@@ -13,19 +13,47 @@ import (
 	"testing"
 )
 
-func TestMakeBayessianMatcherRealData(t *testing.T) {
-	// check on small real dataset
+func TestMakeBayessianMatcherRealDataTokenized(t *testing.T) {
 	ruCountry, _ := ReadCSVFile("testdata/countries.ru.csv", ',')
-	enCountry, err := ReadCSVFile("testdata/countries.en.csv", ',')
-	assert.Equal(t, err, nil)
+	enCountry, _ := ReadCSVFile("testdata/countries.en.csv", ',')
+	ruCountryShinglified := ApplyRetokenizeOnSpaceToMatrix(ApplyTokenizerToMatrix(ruCountry, TokenizeUnidecode, TokenizeLowercase, TokenizeAlphaNumericOnly, ShinglifyTokenizedString3))
+	enCountryShinglified := ApplyRetokenizeOnSpaceToMatrix(ApplyTokenizerToMatrix(enCountry, TokenizeUnidecode, TokenizeLowercase, TokenizeAlphaNumericOnly, ShinglifyTokenizedString3))
+	bayessianMatcherShingles := makeBayessianMatcher(ruCountryShinglified)
+	matches := 0
+	doesNotMatch := 0
+	for index, item := range enCountryShinglified {
+		matchIndex, _ := bayessianMatcherShingles(item)
+		if index == matchIndex {
+			matches += 1
+		} else {
+			doesNotMatch += 1
+		}
+	}
+	// tokenized results are:
+	assert.Equal(t, matches, 149)
+	assert.Equal(t, doesNotMatch, 61)
+}
+func TestMakeBayessianMatcherRealDataNotTokenized(t *testing.T) {
+	// check on small real world dataset.
+	ruCountry, _ := ReadCSVFile("testdata/countries.ru.csv", ',')
+	enCountry, _ := ReadCSVFile("testdata/countries.en.csv", ',')
 	assert.Equal(t, len(ruCountry), 210)
 	assert.Equal(t, len(enCountry), 210)
 	bayessianMatcher := makeBayessianMatcher(ruCountry)
+	matches := 0
+	doesNotMatch := 0
 	for index, item := range enCountry {
-		matchIndex, score := bayessianMatcher(item)
-		assert.Equal(t, index, matchIndex)
-		assert.Equal(t, score, -1)
+		matchIndex, _ := bayessianMatcher(item)
+		if index == matchIndex {
+			matches += 1
+		} else {
+			doesNotMatch += 1
+		}
 	}
+	// untokenized results are:
+	assert.Equal(t, matches, 40)
+	assert.Equal(t, doesNotMatch, 170)
+
 }
 
 func TestMakeBayessianMatcher(t *testing.T) {

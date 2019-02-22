@@ -59,6 +59,17 @@ func ShinglifyTokenizedString(shingleSize int, data string) string {
 	return strings.Join(result, " ")
 }
 
+func ShinglifyTokenizedString5(data string) string {
+	return ShinglifyTokenizedString(5, data)
+}
+func ShinglifyTokenizedString3(data string) string {
+	return ShinglifyTokenizedString(3, data)
+}
+
+func ShinglifyTokenizedString7(data string) string {
+	return ShinglifyTokenizedString(7, data)
+}
+
 // will lose field information
 func ReTokenizeOnSpace(data []string) []string {
 	return strings.Split(strings.Join(data, " "), " ")
